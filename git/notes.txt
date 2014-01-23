@@ -1,0 +1,13 @@
+Introduction:
+
+Git has a configuration option called 'core.fsyncobjectfiles'. This option is switched off by default. Without this option, Git mostly does not perform any syncing operations; in the workload considered for finding bugs, git never syncs without this option. For finding bugs, all workloads were run with this option switched on.
+
+Issues:
+
+1. In the tested workload, Git first appends some data to the end of a file (".git/logs/HEAD"), and then renames a file(".git/refs/heads/master.lock" -> ".git/refs/heads/master"). The former operation (append) will typically not result in more blocks being added to the file; only about 128 bytes are appended. The rename is a part of an atomic file content replacement sequence for the "...master" file. 
+
+For correct operation, both the rename and the append has to be atomic. Correctness is affected (seemingly, as described next) if either only the rename or only the append ends up on disk. This would, of course, mean that correctness will also be affected if the process gets killed (i.e., without a system crash) after the append and before the rename; however, the time window for such a kill is small. With a file system that decides to buffer either the rename or the append, but sends the other operation immediately to disk, the time window (of a system crash that affects correctness) will be considerable.
+
+If the operation is not atomic, git ref-log shows wrong meta-information (without reporting any corruption), but other tested correctness measures reported problems. I do not know the seriousness of this bug, though silently giving wrong meta-information is ominous.
+
+2. 
