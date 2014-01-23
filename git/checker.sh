@@ -101,7 +101,6 @@ function status_check {
 	last_commit="$1"
 
 	o_status=$(git status 2>&1)
-	echo "$o_status"
 	if [ "$last_commit" == "b76cefa" ]
 	then
 		correct_output='# On branch master
