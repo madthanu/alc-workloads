@@ -4,10 +4,38 @@ Git has a configuration option called 'core.fsyncobjectfiles'. This option is sw
 
 Issues:
 
-1. In the tested workload, Git first appends some data to the end of a file (".git/logs/HEAD"), and then renames a file(".git/refs/heads/master.lock" -> ".git/refs/heads/master"). The former operation (append) will typically not result in more blocks being added to the file; only about 128 bytes are appended. The rename is a part of an atomic file content replacement sequence for the "...master" file. 
+1. In the tested workload, Git first appends some data to the end of a file (".git/logs/HEAD"), and then renames a file(".git/refs/heads/master.lock" -> ".git/refs/heads/master"). The former operation (append) will typically not result in more blocks being added to the file; only about 128 bytes are appended. The rename is a part of an atomic file content replacement sequence for the "...master" file; the creation and write to the temporary file ('master.lock') for the file content replacement, happens before the append operation talked about previously.
 
 For correct operation, both the rename and the append has to be atomic. Correctness is affected (seemingly, as described next) if either only the rename or only the append ends up on disk. This would, of course, mean that correctness will also be affected if the process gets killed (i.e., without a system crash) after the append and before the rename; however, the time window for such a kill is small. With a file system that decides to buffer either the rename or the append, but sends the other operation immediately to disk, the time window (of a system crash that affects correctness) will be considerable.
 
-If the operation is not atomic, git ref-log shows wrong meta-information (without reporting any corruption), but other tested correctness measures reported problems. I do not know the seriousness of this bug, though silently giving wrong meta-information is ominous.
+If the the rename does not occur, but the append does, git reports (on the next git operation, after reboot in the case of a system crash) the existence of the 'master.lock' file, and refuses to continue. However, the user is told that 'master.lock' exists probably because another git process is running simultaneously; if the user is sure that another process is not running, the file should be removed, and git can continue. I tested for correctness after removing the master.lock file.
 
-2. 
+If the operation is not atomic, git ref-log shows wrong meta-information (without reporting any corruption), but other tested correctness measures did not report any problems (except the master.lock indication). I do not know the seriousness of this bug, though silently giving wrong meta-information is ominous.
+
+I believe (haven't tested yet) that this bug would practically occur on Btrfs, and may be on Ext4-ordered. Btrfs forces renames to disk immediately, while the append might still be buffered. With Ext4-ordered, delayed allocation might have a similar effect; however, I do not know delayed allocation's effects when file size is increased without allocating newer blocks.
+
+1a. There is also another file (".git/logs/refs/heads/master") that is appended before the rename of 'master.lock'. I tried re-ordering this file before or after the rename, but there was no effect on any of the tested correctness measures; probably indicates we can use more correctness measures.
+
+2. There are two atomic file replacement sequences in the tested workloads (".git/index.lock" -> ".git/index", and ".git/refs/heads/master.lock" -> ".git/refs/heads/master"). Neither of these fsync the appropriate file data before the rename. 
+
+If the file data does not get to disk (i.e., the file is empty or contains garbage), a lot of corruption is reported.
+
+The bug would happen on any file system not considering the creat()->write()->rename() file replacement sequence.
+
+3. Before the creation of 'master.lock' (and its subsequent rename to 'master'), Git creates some temporary files, fills the temporary files with data, does an fsync() on the temporary files, then link()-s the temporary files to permanent-file-names. The permanent file names will be referred to (indirectly) by pointers written to the 'master.lock' file; also, the permanent file names do not previously exist.  After the link, the temporary files are unlink()-ed.
+
+For correct operation, the link() of the temporary files must go to disk before the rename() does. If this does not happen, lots of corruption are reported.
+
+I believe this bug might actually be exposed under Btrfs.
+
+4. 
+
+-----------------
+1. Final durability: Beyond the last rename call, there has been no fsync or anything. This will give delayed durability, depending on the underlying file system's behavior. Typical 5 seconds or 30 seconds.
+
+7. Temporary files might fill up space: If unlinks don't go to disk.
+
+8. No fsync() following creat or mkdir.
+
+9. fsync() required after rename(index): Otherwise, if the rename does not reach the disk, a 'git status' displays 'D' for the files added, then lists them as untracked, apparently. i.e., staging is somehow corrupted.
+
