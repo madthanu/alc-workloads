@@ -67,6 +67,6 @@ Issues
 
    I believe this bug will not be exposed under any of our currently studied file systems.
 
-   a. Git also never does an fsync() on a newly created file. However, since all newly created files (that we observe in the tested workload) are temporary files that will subsequently be link()-ed or rename()-ed to a permanent file, only the link() or the rename() might need to be fsync()-ed.
+   * Git also never does an fsync() on a newly created file. However, since all newly created files (that we observe in the tested workload) are temporary files that will subsequently be link()-ed or rename()-ed to a permanent file, only the link() or the rename() might need to be fsync()-ed.
 
 6. Beyond a final rename call, Git does not perform any sync operation. This will give delayed durability, typically after 5 seconds or 30 seconds. However, some file systems might decide to prevent durability for a longer time.
