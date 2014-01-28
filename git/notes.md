@@ -1,25 +1,31 @@
 Introduction
 ------------
 
-Git has a configuration option called 'core.fsyncobjectfiles'. This option is switched off by default. Without this option, Git mostly does not perform any syncing operation; in the workload considered, git never syncs without this option. For finding bugs, the workload was run with this option switched on.
-
 With Git, many workloads can be tested for bugs, and many correctness checks can be performed. I tested for a simple workload: in a pre-existing repository with some existing files, the workload did a 'git add' of two files, followed by a 'git commit'. It is possible that many more bugs exist with other workloads, but I believe they will follow the same pattern as the discovered bugs.
+
+Git has a configuration option called 'core.fsyncobjectfiles'. This option is switched off by default. Without this option, Git mostly does not perform any syncing operation; in the workload considered, git never syncs without this option. For finding bugs, the workload was run with this option switched on.
 
 The emails listed next (from the Git mailing list) provide information on developer assumptions and opinions about system crash recovery in Git. The description of 'core.fsyncobjectfiles' in the manpage of 'git-config' also provides information.
 
-http://marc.info/?l=git&m=124839484917965&w=2
-http://marc.info/?l=git&m=137489462314389&w=2
-http://marc.info/?l=git&m=133573931013962&w=2
+* http://marc.info/?l=git&m=124839484917965&w=2
+* http://marc.info/?l=git&m=137489462314389&w=2
+* http://marc.info/?l=git&m=133573931013962&w=2
 
-Developer assumptions/opinions:
+Developer assumptions and opinions
+------------------------------
 
-1. Git should work correctly on any file system that orders meta-data and data writes, even without 'core.fsyncobjectfiles'. For file systems that do not maintain order, switching on the fsyncs is a good idea, even though the state is "often" recoverable *manually* (i.e., by a git developer-expert) even if the fsyncs are not switched on. From my experiments, I believe that, except for issue (1) described in the subsequent paragraphs, the former assumption is entirely correct (ordering file system doesn't need 'core.fsyncobjectfiles'). The second assumption would be correct, for common non-reordering filesystems, if we define "recovery" to recover only to a consistent state, without considering durability - git does not delete old old object files, so if the last commit is screwed up, manual recovery to the previous commit is always possible. Jeff King correctly guesses possible errors that might happen in a common re-ordering file system. However, for non common re-ordering file systems, even manual recovery might not be possible, since Git appends to certain meta-information logs (such as './git/logs/HEAD') and overwrites some meta-information pointer files (such as '.git/refs/heads/master'); crazy file systems might even leave the entire contents of these file as garbage when they are being edited. (I assume you have a sensible notion of recovery; deleting the entire repository to get a "consistent" but empty repository, is BS.)
+* Git should work correctly on any file system that orders meta-data and data writes, even without 'core.fsyncobjectfiles'. For file systems that do not maintain order, switching on the fsyncs is a good idea, even though the state is "often" recoverable *manually* (i.e., by a git developer-expert) even if the fsyncs are not switched on.
 
-2. From the manpage description of core.fsyncobjectfiles, and a mail from the mailing list, I believe Torvalds (during 2009) had the following opinion about the term 'journaled file systems': journaling maintains ordering.  I have encountered similar definitions of 'journaled file systems' from my interaction with the LevelDB developer community. It will be interesting to know whether file system developers or researchers agree with this.
+From my experiments, I believe that, except for issue (1) described in the subsequent paragraphs, the former assumption is entirely correct (ordering file system doesn't need 'core.fsyncobjectfiles'). The second assumption would be correct, for common non-reordering filesystems, if we define "recovery" to recover only to a consistent state, without considering durability - git does not delete old old object files, so if the last commit is screwed up, manual recovery to the previous commit is always possible. Jeff King correctly guesses possible errors that might happen in a common re-ordering file system.
 
-3. The manpage entry for 'core.fsyncobjectfiles' seems to assume that the user knows the behavior of the underlying file system (akin to knowledge necessary for SQLite config options). While core.fsyncobjectfiles is not necessary for ext3-ordered, it is needed for automatic recovery in ext4, btrfs, and probably most other modern file systems. Torvalds is hopefully aware of this, but there doesn't seem to be any e-mail in the mailing list that discusses the issue (in the post-2009 era), and the option is still switched off by default.
+However, for non common re-ordering file systems, even manual recovery might not be possible, since Git appends to certain meta-information logs (such as './git/logs/HEAD') and overwrites some meta-information pointer files (such as '.git/refs/heads/master'); crazy file systems might even leave the entire contents of these file as garbage when they are being edited. (I assume you have a sensible notion of recovery; deleting the entire repository to get a "consistent" but empty repository, is BS.)
 
-Issues:
+* From the manpage description of core.fsyncobjectfiles, and a mail from the mailing list, I believe Torvalds (during 2009) had the following opinion about the term 'journaled file systems': journaling maintains ordering.  I have encountered similar definitions of 'journaled file systems' from my interaction with the LevelDB developer community. It will be interesting to know whether file system developers or researchers agree with this.
+
+* The manpage entry for 'core.fsyncobjectfiles' seems to assume that the user knows the behavior of the underlying file system (akin to knowledge necessary for SQLite config options). While core.fsyncobjectfiles is not necessary for ext3-ordered, it is needed for automatic recovery in ext4, btrfs, and probably most other modern file systems. Torvalds is hopefully aware of this, but there doesn't seem to be any e-mail in the mailing list that discusses the issue (in the post-2009 era), and the option is still switched off by default.
+
+Issues
+------
 
 1. In the tested workload, Git first appends some data to the end of a file (".git/logs/HEAD"), and then renames a file(".git/refs/heads/master.lock" -> ".git/refs/heads/master"). The former operation (append) will typically not result in more blocks being added to the file; only about 128 bytes are appended. The rename is a part of an atomic file content replacement sequence for the "...master" file; the creation and write to the temporary file ('master.lock') for the file content replacement, happens before the append operation talked about previously.
 
