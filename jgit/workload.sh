@@ -44,6 +44,10 @@ function do_workload {
 				sed -i "s/\([\.:0-9]* \)clone\((.*= $pid\)\$/\1ignore_clone\2/g" $file
 			done
 		fi
+		for file in $(ls | grep 'strace.out' | grep -v 'byte_dump')
+		do
+			sed -i "s/\([\.:0-9]* \)chmod\((.*\)\$/\1ignore_chmod\2/g" $file
+		done
 	done
 }
 

@@ -37717,7 +37717,7 @@
 20:20:49.861697 mkdir("/mnt/mydisk/.git/objects/55", 0777) = 0
 20:20:49.861843 rename("/mnt/mydisk/.git/objects/noz1163394116523587308.tmp", "/mnt/mydisk/.git/objects/55/d80bac9e92c4902750b6c2e9d6ae598ec4f05f") = 0
 20:20:49.861946 stat("/mnt/mydisk/.git/objects/55/d80bac9e92c4902750b6c2e9d6ae598ec4f05f", {st_mode=S_IFREG|0644, st_size=127, ...}) = 0
-20:20:49.861990 chmod("/mnt/mydisk/.git/objects/55/d80bac9e92c4902750b6c2e9d6ae598ec4f05f", 0100444) = 0
+20:20:49.861990 ignore_chmod("/mnt/mydisk/.git/objects/55/d80bac9e92c4902750b6c2e9d6ae598ec4f05f", 0100444) = 0
 20:20:49.862061 gettimeofday({1390875649, 862077}, NULL) = 0
 20:20:49.862097 gettimeofday({1390875649, 862110}, NULL) = 0
 20:20:49.862154 gettimeofday({1390875649, 862169}, NULL) = 0
@@ -37791,7 +37791,7 @@
 20:20:49.866895 mkdir("/mnt/mydisk/.git/objects/34", 0777) = 0
 20:20:49.867024 rename("/mnt/mydisk/.git/objects/noz6465879638023707828.tmp", "/mnt/mydisk/.git/objects/34/cbd4e9e9e252c2feac87c3d36edd7967b9c6be") = 0
 20:20:49.867109 stat("/mnt/mydisk/.git/objects/34/cbd4e9e9e252c2feac87c3d36edd7967b9c6be", {st_mode=S_IFREG|0644, st_size=150, ...}) = 0
-20:20:49.867149 chmod("/mnt/mydisk/.git/objects/34/cbd4e9e9e252c2feac87c3d36edd7967b9c6be", 0100444) = 0
+20:20:49.867149 ignore_chmod("/mnt/mydisk/.git/objects/34/cbd4e9e9e252c2feac87c3d36edd7967b9c6be", 0100444) = 0
 20:20:49.867287 open("/mnt/mydisk/.git/objects/34/cbd4e9e9e252c2feac87c3d36edd7967b9c6be", O_RDONLY) = 18
 20:20:49.867326 fstat(18, {st_mode=S_IFREG|0444, st_size=150, ...}) = 0
 20:20:49.867359 fcntl(18, F_GETFD)      = 0
