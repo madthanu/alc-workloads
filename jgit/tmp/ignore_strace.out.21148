@@ -1,0 +1,51 @@
+20:20:48.001215 close(10)               = 0
+20:20:48.001270 close(5)                = 0
+20:20:48.001314 dup2(6, 1)              = 1
+20:20:48.001344 close(6)                = 0
+20:20:48.001396 stat("/usr/local/sbin/uname", 0x7fff74476870) = -1 ENOENT (No such file or directory)
+20:20:48.001436 stat("/usr/local/bin/uname", 0x7fff74476870) = -1 ENOENT (No such file or directory)
+20:20:48.001472 stat("/usr/sbin/uname", 0x7fff74476870) = -1 ENOENT (No such file or directory)
+20:20:48.001508 stat("/usr/bin/uname", 0x7fff74476870) = -1 ENOENT (No such file or directory)
+20:20:48.001544 stat("/sbin/uname", 0x7fff74476870) = -1 ENOENT (No such file or directory)
+20:20:48.001580 stat("/bin/uname", {st_mode=S_IFREG|0755, st_size=27072, ...}) = 0
+20:20:48.001630 execve("/bin/uname", [...], [/* 27 vars */]) = 0
+20:20:48.001841 brk(0)                  = 0x1f0c000
+20:20:48.001887 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:48.001926 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f57c6b99000
+20:20:48.001969 access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+20:20:48.002012 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 5
+20:20:48.002049 fstat(5, {st_mode=S_IFREG|0644, st_size=103308, ...}) = 0
+20:20:48.002083 mmap(NULL, 103308, PROT_READ, MAP_PRIVATE, 5, 0) = 0x7f57c6b7f000
+20:20:48.002116 close(5)                = 0
+20:20:48.002148 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:48.002191 open("/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 5
+20:20:48.002228 read(5, ""..., 832)     = 832
+20:20:48.002266 fstat(5, {st_mode=S_IFREG|0755, st_size=1815224, ...}) = 0
+20:20:48.002302 mmap(NULL, 3929304, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7f57c65b9000
+20:20:48.002338 mprotect(0x7f57c676e000, 2097152, PROT_NONE) = 0
+20:20:48.002373 mmap(0x7f57c696e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x1b5000) = 0x7f57c696e000
+20:20:48.003890 mmap(0x7f57c6974000, 17624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f57c6974000
+20:20:48.003954 close(5)                = 0
+20:20:48.004007 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f57c6b7e000
+20:20:48.004048 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f57c6b7d000
+20:20:48.004087 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f57c6b7c000
+20:20:48.004123 arch_prctl(ARCH_SET_FS, 0x7f57c6b7d700) = 0
+20:20:48.004277 mprotect(0x7f57c696e000, 16384, PROT_READ) = 0
+20:20:48.004319 mprotect(0x605000, 4096, PROT_READ) = 0
+20:20:48.004359 mprotect(0x7f57c6b9b000, 4096, PROT_READ) = 0
+20:20:48.004392 munmap(0x7f57c6b7f000, 103308) = 0
+20:20:48.004531 brk(0)                  = 0x1f0c000
+20:20:48.004562 brk(0x1f2d000)          = 0x1f2d000
+20:20:48.004608 open("/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 5
+20:20:48.004660 fstat(5, {st_mode=S_IFREG|0644, st_size=2874880, ...}) = 0
+20:20:48.004699 mmap(NULL, 2874880, PROT_READ, MAP_PRIVATE, 5, 0) = 0x7f57c62fb000
+20:20:48.004737 close(5)                = 0
+20:20:48.004806 uname({sys="Linux", node="adsl-21", ...}) = 0
+20:20:48.004849 fstat(1, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+20:20:48.004885 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f57c6b98000
+20:20:48.004932 write(1, ""..., 6)      = 6
+20:20:48.005041 close(1)                = 0
+20:20:48.005145 munmap(0x7f57c6b98000, 4096) = 0
+20:20:48.005184 close(2)                = 0
+20:20:48.005219 exit_group(0)           = ?
+20:20:48.005297 +++ exited with 0 +++

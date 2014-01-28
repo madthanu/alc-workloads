@@ -1,0 +1,371 @@
+20:20:46.206295 execve("/root/application_fs_bugs/alc-workloads/jgit/org.eclipse.jgit.pgm-3.2.0.201312181205-r.sh", [...], [/* 27 vars */]) = 0
+20:20:46.206635 brk(0)                  = 0xb24000
+20:20:46.206684 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.206739 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff34eddf000
+20:20:46.206786 access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+20:20:46.206829 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.206867 fstat(5, {st_mode=S_IFREG|0644, st_size=103308, ...}) = 0
+20:20:46.206903 mmap(NULL, 103308, PROT_READ, MAP_PRIVATE, 5, 0) = 0x7ff34edc5000
+20:20:46.206934 close(5)                = 0
+20:20:46.206964 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.207006 open("/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.207041 read(5, ""..., 832)     = 832
+20:20:46.207079 fstat(5, {st_mode=S_IFREG|0755, st_size=1815224, ...}) = 0
+20:20:46.207118 mmap(NULL, 3929304, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7ff34e7ff000
+20:20:46.207151 mprotect(0x7ff34e9b4000, 2097152, PROT_NONE) = 0
+20:20:46.207187 mmap(0x7ff34ebb4000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x1b5000) = 0x7ff34ebb4000
+20:20:46.207232 mmap(0x7ff34ebba000, 17624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7ff34ebba000
+20:20:46.207273 close(5)                = 0
+20:20:46.207318 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff34edc4000
+20:20:46.207355 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff34edc3000
+20:20:46.207390 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff34edc2000
+20:20:46.207426 arch_prctl(ARCH_SET_FS, 0x7ff34edc3700) = 0
+20:20:46.207555 mprotect(0x7ff34ebb4000, 16384, PROT_READ) = 0
+20:20:46.207593 mprotect(0x619000, 4096, PROT_READ) = 0
+20:20:46.207687 mprotect(0x7ff34ede1000, 4096, PROT_READ) = 0
+20:20:46.207718 munmap(0x7ff34edc5000, 103308) = 0
+20:20:46.207779 getpid()                = 21115
+20:20:46.207817 rt_sigaction(SIGCHLD, {0x40f100, ~[RTMIN RT_1], SA_RESTORER, 0x7ff34e8354a0}, NULL, 8) = 0
+20:20:46.207865 geteuid()               = 0
+20:20:46.207946 brk(0)                  = 0xb24000
+20:20:46.207980 brk(0xb45000)           = 0xb45000
+20:20:46.208026 getppid()               = 21068
+20:20:46.208071 stat("/mnt/mydisk", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+20:20:46.208110 stat(".", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+20:20:46.208161 open("/root/application_fs_bugs/alc-workloads/jgit/org.eclipse.jgit.pgm-3.2.0.201312181205-r.sh", O_RDONLY) = 5
+20:20:46.208203 fcntl(5, F_DUPFD, 10)   = 10
+20:20:46.208235 close(5)                = 0
+20:20:46.208262 fcntl(10, F_SETFD, FD_CLOEXEC) = 0
+20:20:46.208291 rt_sigaction(SIGINT, NULL, {SIG_DFL, [], 0}, 8) = 0
+20:20:46.208323 rt_sigaction(SIGINT, {0x40f100, ~[RTMIN RT_1], SA_RESTORER, 0x7ff34e8354a0}, NULL, 8) = 0
+20:20:46.208356 rt_sigaction(SIGQUIT, NULL, {SIG_DFL, [], 0}, 8) = 0
+20:20:46.208388 rt_sigaction(SIGQUIT, {SIG_DFL, ~[RTMIN RT_1], SA_RESTORER, 0x7ff34e8354a0}, NULL, 8) = 0
+20:20:46.208420 rt_sigaction(SIGTERM, NULL, {SIG_DFL, [], 0}, 8) = 0
+20:20:46.208451 rt_sigaction(SIGTERM, {SIG_DFL, ~[RTMIN RT_1], SA_RESTORER, 0x7ff34e8354a0}, NULL, 8) = 0
+20:20:46.208487 read(10, ""..., 8192)   = 8192
+20:20:46.208601 pipe([5, 6])            = 0
+20:20:46.208646 ignore_clone(child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff34edc39d0) = 21122
+20:20:46.208944 close(6)                = 0
+20:20:46.208981 read(5, ""..., 128)     = 90
+20:20:46.212213 read(5, "", 128)        = 0
+20:20:46.212350 close(5)                = 0
+20:20:46.212391 wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 21122
+20:20:46.212481 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=21122, si_status=0, si_utime=0, si_stime=0} ---
+20:20:46.212506 rt_sigreturn()          = 21122
+20:20:46.212573 stat("/root/application_fs_bugs/alc-workloads/jgit/org.eclipse.jgit.pgm-3.2.0.201312181205-r.sh", {st_mode=S_IFREG|0755, st_size=2797879, ...}) = 0
+20:20:46.212649 pipe([5, 6])            = 0
+20:20:46.212688 ignore_clone(child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff34edc39d0) = 21123
+20:20:46.212800 close(6)                = 0
+20:20:46.214841 read(5, ""..., 128)     = 6
+20:20:46.217410 read(5, "", 128)        = 0
+20:20:46.217478 close(5)                = 0
+20:20:46.217516 wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 21123
+20:20:46.217742 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=21123, si_status=0, si_utime=0, si_stime=0} ---
+20:20:46.217767 rt_sigreturn()          = 21123
+20:20:46.217873 execve("/usr/local/sbin/java", [...], [/* 28 vars */]) = -1 ENOENT (No such file or directory)
+20:20:46.217940 execve("/usr/local/bin/java", [...], [/* 28 vars */]) = -1 ENOENT (No such file or directory)
+20:20:46.217998 execve("/usr/sbin/java", [...], [/* 28 vars */]) = -1 ENOENT (No such file or directory)
+20:20:46.218056 execve("/usr/bin/java", [...], [/* 28 vars */]) = 0
+20:20:46.218283 brk(0)                  = 0xb83000
+20:20:46.218330 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.218369 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f0db5f32000
+20:20:46.218409 readlink("/proc/self/exe", ""..., 4096) = 46
+20:20:46.218491 access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+20:20:46.218535 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/tls/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.218575 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/tls/x86_64", 0x7fff8ba9ac80) = -1 ENOENT (No such file or directory)
+20:20:46.218612 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/tls/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.218649 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/tls", 0x7fff8ba9ac80) = -1 ENOENT (No such file or directory)
+20:20:46.218685 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.218722 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/x86_64", 0x7fff8ba9ac80) = -1 ENOENT (No such file or directory)
+20:20:46.218758 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.218794 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+20:20:46.218834 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/tls/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.218870 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/tls/x86_64", 0x7fff8ba9ac80) = -1 ENOENT (No such file or directory)
+20:20:46.218903 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/tls/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.218938 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/tls", 0x7fff8ba9ac80) = -1 ENOENT (No such file or directory)
+20:20:46.218971 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.219006 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/x86_64", 0x7fff8ba9ac80) = -1 ENOENT (No such file or directory)
+20:20:46.219039 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.219074 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli", 0x7fff8ba9ac80) = -1 ENOENT (No such file or directory)
+20:20:46.219109 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.219150 fstat(5, {st_mode=S_IFREG|0644, st_size=103308, ...}) = 0
+20:20:46.219183 mmap(NULL, 103308, PROT_READ, MAP_PRIVATE, 5, 0) = 0x7f0db5f18000
+20:20:46.219215 close(5)                = 0
+20:20:46.219246 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.219286 open("/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.219321 read(5, ""..., 832)     = 832
+20:20:46.219353 fstat(5, {st_mode=S_IFREG|0755, st_size=135366, ...}) = 0
+20:20:46.219386 mmap(NULL, 2212904, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7f0db5af5000
+20:20:46.219418 mprotect(0x7f0db5b0d000, 2093056, PROT_NONE) = 0
+20:20:46.219452 mmap(0x7f0db5d0c000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x17000) = 0x7f0db5d0c000
+20:20:46.219495 mmap(0x7f0db5d0e000, 13352, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f0db5d0e000
+20:20:46.219538 close(5)                = 0
+20:20:46.219572 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libjli.so", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.219646 read(5, ""..., 832)     = 832
+20:20:46.219677 fstat(5, {st_mode=S_IFREG|0644, st_size=18632, ...}) = 0
+20:20:46.219709 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f0db5f17000
+20:20:46.219745 mmap(NULL, 2113832, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7f0db58f0000
+20:20:46.219777 mprotect(0x7f0db58f4000, 2093056, PROT_NONE) = 0
+20:20:46.219809 mmap(0x7f0db5af3000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x3000) = 0x7f0db5af3000
+20:20:46.219857 close(5)                = 0
+20:20:46.219892 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.219928 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.219967 open("/lib/x86_64-linux-gnu/libdl.so.2", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.220003 read(5, ""..., 832)     = 832
+20:20:46.220034 fstat(5, {st_mode=S_IFREG|0644, st_size=14768, ...}) = 0
+20:20:46.220066 mmap(NULL, 2109704, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7f0db56ec000
+20:20:46.220098 mprotect(0x7f0db56ee000, 2097152, PROT_NONE) = 0
+20:20:46.220131 mmap(0x7f0db58ee000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x2000) = 0x7f0db58ee000
+20:20:46.220178 close(5)                = 0
+20:20:46.220212 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.220248 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.220285 open("/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.220319 read(5, ""..., 832)     = 832
+20:20:46.220350 fstat(5, {st_mode=S_IFREG|0755, st_size=1815224, ...}) = 0
+20:20:46.220384 mmap(NULL, 3929304, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7f0db532c000
+20:20:46.220416 mprotect(0x7f0db54e1000, 2097152, PROT_NONE) = 0
+20:20:46.220447 mmap(0x7f0db56e1000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x1b5000) = 0x7f0db56e1000
+20:20:46.220490 mmap(0x7f0db56e7000, 17624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f0db56e7000
+20:20:46.220532 close(5)                = 0
+20:20:46.220570 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.220606 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.220642 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.220678 open("/lib/x86_64-linux-gnu/libz.so.1", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.220713 read(5, ""..., 832)     = 832
+20:20:46.220743 fstat(5, {st_mode=S_IFREG|0644, st_size=92720, ...}) = 0
+20:20:46.220776 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f0db5f16000
+20:20:46.220812 mmap(NULL, 2187824, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7f0db5115000
+20:20:46.220851 mprotect(0x7f0db512b000, 2093056, PROT_NONE) = 0
+20:20:46.220884 mmap(0x7f0db532a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x15000) = 0x7f0db532a000
+20:20:46.220930 close(5)                = 0
+20:20:46.220980 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f0db5f15000
+20:20:46.221017 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f0db5f14000
+20:20:46.221053 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f0db5f13000
+20:20:46.221087 arch_prctl(ARCH_SET_FS, 0x7f0db5f14700) = 0
+20:20:46.221218 mprotect(0x7f0db56e1000, 16384, PROT_READ) = 0
+20:20:46.221255 mprotect(0x7f0db532a000, 4096, PROT_READ) = 0
+20:20:46.221294 mprotect(0x7f0db58ee000, 4096, PROT_READ) = 0
+20:20:46.221327 mprotect(0x7f0db5af3000, 4096, PROT_READ) = 0
+20:20:46.221368 mprotect(0x7f0db5d0c000, 4096, PROT_READ) = 0
+20:20:46.221406 mprotect(0x608000, 4096, PROT_READ) = 0
+20:20:46.221441 mprotect(0x7f0db5f34000, 4096, PROT_READ) = 0
+20:20:46.221472 munmap(0x7f0db5f18000, 103308) = 0
+20:20:46.221513 set_tid_address(0x7f0db5f149d0) = 21115
+20:20:46.221541 set_robust_list(0x7f0db5f149e0, 24) = 0
+20:20:46.221568 futex(0x7fff8ba9b57c, FUTEX_WAIT_BITSET_PRIVATE|FUTEX_CLOCK_REALTIME, 1, NULL, 7f0db5f14700) = -1 EAGAIN (Resource temporarily unavailable)
+20:20:46.221611 rt_sigaction(SIGRTMIN, {0x7f0db5afb750, [], SA_RESTORER|SA_SIGINFO, 0x7f0db5b04cb0}, NULL, 8) = 0
+20:20:46.221646 rt_sigaction(SIGRT_1, {0x7f0db5afb7e0, [], SA_RESTORER|SA_RESTART|SA_SIGINFO, 0x7f0db5b04cb0}, NULL, 8) = 0
+20:20:46.221679 rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
+20:20:46.221715 getrlimit(RLIMIT_STACK, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+20:20:46.221839 brk(0)                  = 0xb83000
+20:20:46.221869 brk(0xba4000)           = 0xba4000
+20:20:46.221919 readlink("/proc/self/exe", ""..., 4096) = 46
+20:20:46.221996 access("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libjava.so", F_OK) = 0
+20:20:46.222044 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/jvm.cfg", O_RDONLY) = 5
+20:20:46.222090 fstat(5, {st_mode=S_IFREG|0644, st_size=1725, ...}) = 0
+20:20:46.222125 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f0db5f31000
+20:20:46.222157 read(5, ""..., 4096)    = 1725
+20:20:46.222206 read(5, "", 4096)       = 0
+20:20:46.222241 close(5)                = 0
+20:20:46.222270 munmap(0x7f0db5f31000, 4096) = 0
+20:20:46.222314 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libjvm.so", {st_mode=S_IFREG|0644, st_size=12040823, ...}) = 0
+20:20:46.222359 getgid()                = 0
+20:20:46.222389 getegid()               = 0
+20:20:46.222417 getuid()                = 0
+20:20:46.222445 geteuid()               = 0
+20:20:46.222482 execve("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java", [...], [/* 29 vars */]) = 0
+20:20:46.222717 brk(0)                  = 0xa8e000
+20:20:46.222761 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.222798 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbdb4106000
+20:20:46.222837 readlink("/proc/self/exe", ""..., 4096) = 46
+20:20:46.222892 access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+20:20:46.222933 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/tls/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.222970 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/tls/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223004 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/tls/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223039 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/tls", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223073 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223115 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223149 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223184 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+20:20:46.223222 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/tls/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223257 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/tls/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223290 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/tls/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223325 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/tls", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223358 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223392 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223425 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223460 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../jre/lib/amd64/jli", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223493 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/tls/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223528 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/tls/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223562 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/tls/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223596 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/tls", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223667 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223701 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223735 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223770 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+20:20:46.223807 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/tls/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223842 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/tls/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223875 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/tls/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223909 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/tls", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.223943 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.223977 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.224011 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.224046 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+20:20:46.224089 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64/tls/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.224123 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64/tls/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.224157 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64/tls/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.224191 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64/tls", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.224225 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.224260 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64/x86_64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.224293 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.224328 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64", 0x7fffaabcf610) = -1 ENOENT (No such file or directory)
+20:20:46.224363 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.224396 fstat(5, {st_mode=S_IFREG|0644, st_size=103308, ...}) = 0
+20:20:46.224428 mmap(NULL, 103308, PROT_READ, MAP_PRIVATE, 5, 0) = 0x7fbdb40ec000
+20:20:46.224460 close(5)                = 0
+20:20:46.224490 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.224530 open("/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.224565 read(5, ""..., 832)     = 832
+20:20:46.224596 fstat(5, {st_mode=S_IFREG|0755, st_size=135366, ...}) = 0
+20:20:46.224630 mmap(NULL, 2212904, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7fbdb3cc9000
+20:20:46.224661 mprotect(0x7fbdb3ce1000, 2093056, PROT_NONE) = 0
+20:20:46.224694 mmap(0x7fbdb3ee0000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x17000) = 0x7fbdb3ee0000
+20:20:46.224737 mmap(0x7fbdb3ee2000, 13352, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbdb3ee2000
+20:20:46.224778 close(5)                = 0
+20:20:46.224813 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libjli.so", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.224849 read(5, ""..., 832)     = 832
+20:20:46.224879 fstat(5, {st_mode=S_IFREG|0644, st_size=18632, ...}) = 0
+20:20:46.224911 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbdb40eb000
+20:20:46.224947 mmap(NULL, 2113832, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7fbdb3ac4000
+20:20:46.224979 mprotect(0x7fbdb3ac8000, 2093056, PROT_NONE) = 0
+20:20:46.225010 mmap(0x7fbdb3cc7000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x3000) = 0x7fbdb3cc7000
+20:20:46.225054 close(5)                = 0
+20:20:46.225089 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.225125 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.225160 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.225196 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.225234 open("/lib/x86_64-linux-gnu/libdl.so.2", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.225270 read(5, ""..., 832)     = 832
+20:20:46.225300 fstat(5, {st_mode=S_IFREG|0644, st_size=14768, ...}) = 0
+20:20:46.225333 mmap(NULL, 2109704, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7fbdb38c0000
+20:20:46.225365 mprotect(0x7fbdb38c2000, 2097152, PROT_NONE) = 0
+20:20:46.225397 mmap(0x7fbdb3ac2000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x2000) = 0x7fbdb3ac2000
+20:20:46.225441 close(5)                = 0
+20:20:46.225475 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.225518 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.225553 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.225588 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.225625 open("/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.225660 read(5, ""..., 832)     = 832
+20:20:46.225691 fstat(5, {st_mode=S_IFREG|0755, st_size=1815224, ...}) = 0
+20:20:46.225725 mmap(NULL, 3929304, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7fbdb3500000
+20:20:46.225757 mprotect(0x7fbdb36b5000, 2097152, PROT_NONE) = 0
+20:20:46.225789 mmap(0x7fbdb38b5000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x1b5000) = 0x7fbdb38b5000
+20:20:46.225829 mmap(0x7fbdb38bb000, 17624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbdb38bb000
+20:20:46.225872 close(5)                = 0
+20:20:46.225909 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.225945 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.225980 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.226015 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.226050 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.226086 open("/lib/x86_64-linux-gnu/libz.so.1", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.226122 read(5, ""..., 832)     = 832
+20:20:46.226152 fstat(5, {st_mode=S_IFREG|0644, st_size=92720, ...}) = 0
+20:20:46.226184 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbdb40ea000
+20:20:46.226220 mmap(NULL, 2187824, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7fbdb32e9000
+20:20:46.226252 mprotect(0x7fbdb32ff000, 2093056, PROT_NONE) = 0
+20:20:46.226284 mmap(0x7fbdb34fe000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x15000) = 0x7fbdb34fe000
+20:20:46.226327 close(5)                = 0
+20:20:46.226375 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbdb40e9000
+20:20:46.226410 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbdb40e8000
+20:20:46.226445 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbdb40e7000
+20:20:46.226478 arch_prctl(ARCH_SET_FS, 0x7fbdb40e8700) = 0
+20:20:46.226599 mprotect(0x7fbdb38b5000, 16384, PROT_READ) = 0
+20:20:46.226635 mprotect(0x7fbdb34fe000, 4096, PROT_READ) = 0
+20:20:46.226673 mprotect(0x7fbdb3ac2000, 4096, PROT_READ) = 0
+20:20:46.226706 mprotect(0x7fbdb3cc7000, 4096, PROT_READ) = 0
+20:20:46.226746 mprotect(0x7fbdb3ee0000, 4096, PROT_READ) = 0
+20:20:46.226782 mprotect(0x608000, 4096, PROT_READ) = 0
+20:20:46.226818 mprotect(0x7fbdb4108000, 4096, PROT_READ) = 0
+20:20:46.226849 munmap(0x7fbdb40ec000, 103308) = 0
+20:20:46.226888 set_tid_address(0x7fbdb40e89d0) = 21115
+20:20:46.226916 set_robust_list(0x7fbdb40e89e0, 24) = 0
+20:20:46.226943 futex(0x7fffaabcff0c, FUTEX_WAIT_BITSET_PRIVATE|FUTEX_CLOCK_REALTIME, 1, NULL, 7fbdb40e8700) = -1 EAGAIN (Resource temporarily unavailable)
+20:20:46.226979 rt_sigaction(SIGRTMIN, {0x7fbdb3ccf750, [], SA_RESTORER|SA_SIGINFO, 0x7fbdb3cd8cb0}, NULL, 8) = 0
+20:20:46.227013 rt_sigaction(SIGRT_1, {0x7fbdb3ccf7e0, [], SA_RESTORER|SA_RESTART|SA_SIGINFO, 0x7fbdb3cd8cb0}, NULL, 8) = 0
+20:20:46.227045 rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
+20:20:46.227081 getrlimit(RLIMIT_STACK, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+20:20:46.227197 brk(0)                  = 0xa8e000
+20:20:46.227227 brk(0xaaf000)           = 0xaaf000
+20:20:46.227272 readlink("/proc/self/exe", ""..., 4096) = 46
+20:20:46.227349 access("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libjava.so", F_OK) = 0
+20:20:46.227400 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/jvm.cfg", O_RDONLY) = 5
+20:20:46.227445 fstat(5, {st_mode=S_IFREG|0644, st_size=1725, ...}) = 0
+20:20:46.227480 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbdb4105000
+20:20:46.227512 read(5, ""..., 4096)    = 1725
+20:20:46.227560 read(5, "", 4096)       = 0
+20:20:46.227594 close(5)                = 0
+20:20:46.227651 munmap(0x7fbdb4105000, 4096) = 0
+20:20:46.227696 stat("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libjvm.so", {st_mode=S_IFREG|0644, st_size=12040823, ...}) = 0
+20:20:46.227742 getgid()                = 0
+20:20:46.227771 getegid()               = 0
+20:20:46.227799 getuid()                = 0
+20:20:46.227827 geteuid()               = 0
+20:20:46.227864 futex(0x7fbdb3ac30b0, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+20:20:46.227905 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libjvm.so", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.227941 read(5, ""..., 832)     = 832
+20:20:46.227972 fstat(5, {st_mode=S_IFREG|0644, st_size=12040823, ...}) = 0
+20:20:46.228009 mmap(NULL, 12356280, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7fbdb2720000
+20:20:46.228041 mprotect(0x7fbdb3025000, 2093056, PROT_NONE) = 0
+20:20:46.228073 mmap(0x7fbdb3224000, 638976, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x904000) = 0x7fbdb3224000
+20:20:46.228115 mmap(0x7fbdb32c0000, 166584, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbdb32c0000
+20:20:46.228163 close(5)                = 0
+20:20:46.228200 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libstdc++.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.228237 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libstdc++.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.228273 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libstdc++.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.228308 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.228342 fstat(5, {st_mode=S_IFREG|0644, st_size=103308, ...}) = 0
+20:20:46.228374 mmap(NULL, 103308, PROT_READ, MAP_PRIVATE, 5, 0) = 0x7fbdb40ec000
+20:20:46.228405 close(5)                = 0
+20:20:46.228435 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.228474 open("/usr/lib/x86_64-linux-gnu/libstdc++.so.6", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.228510 read(5, ""..., 832)     = 832
+20:20:46.228541 fstat(5, {st_mode=S_IFREG|0644, st_size=962656, ...}) = 0
+20:20:46.228580 mmap(NULL, 3142544, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7fbdb2420000
+20:20:46.228613 mprotect(0x7fbdb2502000, 2093056, PROT_NONE) = 0
+20:20:46.228646 mmap(0x7fbdb2701000, 40960, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0xe1000) = 0x7fbdb2701000
+20:20:46.228688 mmap(0x7fbdb270b000, 82832, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbdb270b000
+20:20:46.228729 close(5)                = 0
+20:20:46.228766 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.228803 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.228838 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.228873 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.228910 open("/lib/x86_64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.228945 read(5, ""..., 832)     = 832
+20:20:46.228976 fstat(5, {st_mode=S_IFREG|0644, st_size=1030512, ...}) = 0
+20:20:46.229012 mmap(NULL, 3125544, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7fbdb2124000
+20:20:46.229045 mprotect(0x7fbdb221f000, 2093056, PROT_NONE) = 0
+20:20:46.229083 mmap(0x7fbdb241e000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0xfa000) = 0x7fbdb241e000
+20:20:46.229132 close(5)                = 0
+20:20:46.229170 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/../lib/amd64/jli/libgcc_s.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.229207 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libgcc_s.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.229243 open("/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libgcc_s.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+20:20:46.229278 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+20:20:46.229317 open("/lib/x86_64-linux-gnu/libgcc_s.so.1", O_RDONLY|O_CLOEXEC) = 5
+20:20:46.229351 read(5, ""..., 832)     = 832
+20:20:46.229382 fstat(5, {st_mode=S_IFREG|0644, st_size=88384, ...}) = 0
+20:20:46.229417 mmap(NULL, 2184216, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 5, 0) = 0x7fbdb1f0e000
+20:20:46.229451 mprotect(0x7fbdb1f23000, 2093056, PROT_NONE) = 0
+20:20:46.229484 mmap(0x7fbdb2122000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 5, 0x14000) = 0x7fbdb2122000
+20:20:46.229531 close(5)                = 0
+20:20:46.229628 mprotect(0x7fbdb2122000, 4096, PROT_READ) = 0
+20:20:46.229686 mprotect(0x7fbdb241e000, 4096, PROT_READ) = 0
+20:20:46.230805 mprotect(0x7fbdb2701000, 32768, PROT_READ) = 0
+20:20:46.233730 mprotect(0x7fbdb3224000, 528384, PROT_READ) = 0
+20:20:46.233980 munmap(0x7fbdb40ec000, 103308) = 0
+20:20:46.234072 mmap(NULL, 1052672, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7fbdb3fe6000
+20:20:46.234125 mprotect(0x7fbdb3fe6000, 4096, PROT_NONE) = 0
+20:20:46.234165 clone(child_stack=0x7fbdb40e5ff0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7fbdb40e69d0, tls=0x7fbdb40e6700, child_tidptr=0x7fbdb40e69d0) = 21124
+20:20:46.234234 futex(0x7fbdb40e69d0, FUTEX_WAIT, 21124, NULL) = 0
+20:20:47.984605 exit_group(0)           = ?
+20:20:47.988234 +++ exited with 0 +++

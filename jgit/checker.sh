@@ -207,7 +207,7 @@ function rm_add_commit_check {
 		return;
 	fi
 	o_correct_part='[master ........................................] test3'
-	o_consistent=$(echo "$o_commit" | grep -v "[master ........................................] test3" | grep -v '^$' | wc -l)
+	o_consistent=$(echo "$o_commit" | grep -ev "[master ........................................] test3" | grep -v '^$' | wc -l)
 	if [ $o_consistent -ne 0 ]
 	then
 		echo "$o_commit"
@@ -243,16 +243,8 @@ function post_checks {
 	check_data file3 "after all commit operations"
 	check_data file4 "after all commit operations"
 
-	o_checkout=$(git checkout ed47257 2>&1)
-	correct_output='Note: checking out '"'"'ed47257'"'"'.
-			You are in '"'"'detached HEAD'"'"' state. You can look around, make experimental
-			changes and commit them, and you can discard any commits you make in this
-			state without impacting any branches by performing another checkout.
-			If you want to create a new branch to retain commits you create, you may
-			do so (now or later) by using -b with the checkout command again. Example:
-			git checkout -b new_branch_name
-			HEAD is now at ed47257... test1'
-	o_correct=$(diff <(echo "$correct_output" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$o_checkout" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
+	o_checkout=$(git checkout e318e4a 2>&1)
+	o_correct=$(echo "$o_checkout" | grep -v '^$' | wc -l)
 	if [ $o_correct -ne 0 ]
 	then
 		echo "inconsistent checkout, first commit"
@@ -272,8 +264,7 @@ function post_checks {
 	check_data file2 "after checking out first commit"
 
 	o_checkout=$(git checkout master 2>&1)
-	correct_output='Previous HEAD position was ed47257... test1
-			Switched to branch '"'"'master'"'"''
+	correct_output='Switched to branch '"'"'master'"'"''
 	o_correct=$(diff <(echo "$correct_output" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$o_checkout" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
 	if [ $o_correct -ne 0 ]
 	then
@@ -288,15 +279,8 @@ function post_checks {
 	fi
 
 	o_checkout=$(git checkout 34cbd4e 2>&1)
-	correct_output='Note: checking out '"'"'34cbd4e'"'"'.
-			You are in '"'"'detached HEAD'"'"' state. You can look around, make experimental
-			changes and commit them, and you can discard any commits you make in this
-			state without impacting any branches by performing another checkout.
-			If you want to create a new branch to retain commits you create, you may
-			do so (now or later) by using -b with the checkout command again. Example:
-			git checkout -b new_branch_name
-			HEAD is now at b76cefa... test2'
-	o_correct=$(diff <(echo "$correct_output" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$o_checkout" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
+	echo "$o_checkout"
+	o_correct=$(echo "$o_checkout" | grep -v '^$' | wc -l)
 	if [ $o_correct -ne 0 ]
 	then
 		echo "inconsistent checkout, final commit"
@@ -333,8 +317,6 @@ short_summary="$short_summary; $status_check_output"
 rm_add_commit_check_output=$(rm_add_commit_check $last_commit)
 echo "rm_add_commit_check: $rm_add_commit_check_output"
 short_summary="$short_summary; $rm_add_commit_check_output"
-
-exit
 
 post_checks_output=$(post_checks $last_commit)
 echo "post_checks: $post_checks_output"
