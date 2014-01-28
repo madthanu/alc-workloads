@@ -21,18 +21,28 @@ function initialize_workload {
 
 function do_workload {
 	cp -R /mnt/mydisk "$wd"/tmp/snapshot
-	strace -D -s 10 -ff -tt -o "$wd"/tmp/strace.out \
+	strace -D -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		$jgit add .
-	strace -D -s 10 -ff -tt -o "$wd"/tmp/strace.out \
+	strace -D -s 0 -ff -tt -o "$wd"/tmp/strace.out \
+		echo "Done add"
+	strace -D -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		$jgit commit -m "test2"
 
-	execved=$(grep execve "$wd"/tmp/* | awk -F ':' '{print $1}' | awk -F '.' '{print $3}' | uniq)
+	cd "$wd"/tmp/
+	execved=$(grep execve * | awk -F ':' '{print $1}' | awk -F '.' '{print $3}' | uniq)
 	for pid in $execved
 	do
-		java_found=$(grep execve "$wd"/tmp/strace.out.$pid | grep java | wc -l)
+		java_found=$(grep execve strace.out.$pid | grep 'java\|echo' | wc -l)
 		if [ $java_found -eq 0 ]
 		then
-			rm "$wd"/tmp/*$pid*
+			for file in *$pid*
+			do
+				mv $file ignore_$file
+			done
+			for file in $(ls | grep 'strace.out' | grep -v 'byte_dump')
+			do
+				sed -i "s/\([\.:0-9]* \)clone\((.*= $pid\)\$/\1ignore_clone\2/g" $file
+			done
 		fi
 	done
 }

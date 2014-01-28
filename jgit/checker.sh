@@ -16,7 +16,6 @@ else
 fi
 
 ### Actual program checker
-alias git='/root/application_fs_bugs/git/installation/bin/git'
 rm -rf /mnt/mydisk
 cp -R "$replayed_snapshot" /mnt/mydisk
 rm -rf /tmp/scratchpad
@@ -26,6 +25,10 @@ cd /mnt/mydisk
 
 
 echo 0 > /tmp/lock_found
+
+function git {
+	/root/application_fs_bugs/alc-workloads/jgit/org.eclipse.jgit.pgm-3.2.0.201312181205-r.sh "$@"
+}
 
 function refs_log_check {
 	function matches {
@@ -40,31 +43,29 @@ function refs_log_check {
 		fi
 	}
 	o1=$(git show-ref 2>&1)
-	o1_c1='b76cefac9298a1b1e5836eb553d89dcb94b831ec refs/heads/master'
-	o1_c2='ed472578156e8eacbe9af5dce6d27ecf234a2468 refs/heads/master'
+	o1_c1='34cbd4e9e9e252c2feac87c3d36edd7967b9c6be	HEAD
+		34cbd4e9e9e252c2feac87c3d36edd7967b9c6be	refs/heads/master'
+	o1_c2='e318e4aa5c5b555f0fceb8e315991087e1ff27aa	HEAD
+		e318e4aa5c5b555f0fceb8e315991087e1ff27aa	refs/heads/master'
 
-	o2=$(git show-ref -h HEAD 2>&1)
-	o2_c1='b76cefac9298a1b1e5836eb553d89dcb94b831ec HEAD'
-	o2_c2='ed472578156e8eacbe9af5dce6d27ecf234a2468 HEAD'
+	o2=$(git reflog 2>&1)
+	o2_c1='34cbd4e HEAD@{0}: commit: test2
+		e318e4a HEAD@{1}: commit (initial): test1'
+	o2_c2='e318e4a HEAD@{0}: commit (initial): test1'
 
-	o3=$(git reflog 2>&1)
-	o3_c1='b76cefa HEAD@{0}: commit: test2
-		ed47257 HEAD@{1}: commit (initial): test1'
-	o3_c2='ed47257 HEAD@{0}: commit (initial): test1'
-
-	o4=$(git log 2>&1)
-	o4_c1='commit b76cefac9298a1b1e5836eb553d89dcb94b831ec
-		Author: root <root@me>
-		Date:   Thu Jan 9 16:18:11 2014 -0600
-		test2
-		commit ed472578156e8eacbe9af5dce6d27ecf234a2468
-		Author: root <root@me>
-		Date:   Thu Jan 9 16:18:11 2014 -0600
-		test1'
-	o4_c2='commit ed472578156e8eacbe9af5dce6d27ecf234a2468
-		Author: root <root@me>
-		Date:   Thu Jan 9 16:18:11 2014 -0600
-		test1'
+	o3=$(git log 2>&1)
+	o3_c1='commit 34cbd4e9e9e252c2feac87c3d36edd7967b9c6be
+		Author: root <root@adsl-21.cs.wisc.edu>
+		Date:   Mon Jan 27 20:20:49 2014 -0600
+		    test2
+		commit e318e4aa5c5b555f0fceb8e315991087e1ff27aa
+		Author: root <root@adsl-21.cs.wisc.edu>
+		Date:   Mon Jan 27 20:20:46 2014 -0600
+		    test1'
+	o3_c2='commit e318e4aa5c5b555f0fceb8e315991087e1ff27aa
+		Author: root <root@adsl-21.cs.wisc.edu>
+		Date:   Mon Jan 27 20:20:46 2014 -0600
+		    test1'
 	if [ $(matches "$o1" "$o1_c1") -eq 0 ] && [ $(matches "$o1" "$o1_c2") -eq 0 ]
 	then
 		echo "insane o1"
@@ -80,20 +81,14 @@ function refs_log_check {
 		echo "insane o3"
 		return
 	fi
-	if [ $(matches "$o4" "$o4_c1") -eq 0 ] && [ $(matches "$o4" "$o4_c2") -eq 0 ]
-	then
-		echo "insane o4"
-		return
-	fi
 	o1_commit=$(echo "$o1" | awk '{print substr($1, 0, 7)}' | head -1)
-	o2_commit=$(echo "$o2" | awk '{print substr($1, 0, 7)}' | head -1)
-	o3_commit=$(echo "$o3" | awk '{print $1}' | head -1)
-	o4_commit=$(echo "$o4" | head -1 | awk '{print substr($2, 0, 7)}')
-	if [ $o1_commit == $o2_commit ] && [ $o2_commit == $o3_commit ] && [ $o3_commit == $o4_commit ]
+	o2_commit=$(echo "$o2" | awk '{print $1}' | head -1)
+	o3_commit=$(echo "$o3" | head -1 | awk '{print substr($2, 0, 7)}')
+	if [ $o1_commit == $o2_commit ] && [ $o2_commit == $o3_commit ]
 	then
 		echo "consistent, $o1_commit"
 	else
-		echo "inconsistent, $o1_commit, $o2_commit, $o3_commit, $o4_commit"
+		echo "inconsistent, $o1_commit, $o2_commit, $o3_commit"
 	fi
 }
 
@@ -101,10 +96,9 @@ function status_check {
 	last_commit="$1"
 
 	o_status=$(git status 2>&1)
-	if [ "$last_commit" == "b76cefa" ]
+	if [ "$last_commit" == "34cbd4e" ]
 	then
-		correct_output='# On branch master
-				nothing to commit (working directory clean)'
+		correct_output='# On branch master'
 		o_consistent=$(diff <(echo "$o_status" | sed 's/[ \t]//g' | grep -v '^#$') <(echo "$correct_output" | sed 's/[ \t]//g' | grep -v '^#$') | wc -l)
 		if [ $o_consistent -ne 0 ]
 		then
@@ -118,22 +112,21 @@ function status_check {
 
 	o_file3_tracked='# On branch master
 			# Changes to be committed:
-			#   (use "git reset HEAD <file>..." to unstage)
+			# 
 			#	new file:   file3
 			# Untracked files:
-			#   (use "git add <file>..." to include in what will be committed)
+			# 
 			#	file4'
 	o_both_tracked='# On branch master
 			# Changes to be committed:
-			#   (use "git reset HEAD <file>..." to unstage)
+			# 
 			#	new file:   file3
 			#	new file:   file4'
 	o_both_untracked='# On branch master
 			# Untracked files:
-			#   (use "git add <file>..." to include in what will be committed)
-			#	file3
-			#	file4
-			nothing added to commit but untracked files present (use "git add" to track)'
+			# 
+			# 	file3
+			# 	file4'
 	o_file3_tracked_match=$(diff <(echo "$o_status" | sed 's/[ \t]//g' | grep -v '^#$') <(echo "$o_file3_tracked" | sed 's/[ \t]//g' | grep -v '^#$') | wc -l)
 	o_both_tracked_match=$(diff <(echo "$o_status" | sed 's/[ \t]//g' | grep -v '^#$') <(echo "$o_both_tracked" | sed 's/[ \t]//g' | grep -v '^#$') | wc -l)
 	o_both_untracked_match=$(diff <(echo "$o_status" | sed 's/[ \t]//g' | grep -v '^#$') <(echo "$o_both_untracked" | sed 's/[ \t]//g' | grep -v '^#$') | wc -l)
@@ -159,24 +152,11 @@ function status_check {
 	echo "inconsistent"
 }
 
-function fsck_check {
-	o=$(git fsck 2>&1)
-	if [ $(echo "$o" | grep -v '^$' | wc -l) -eq 0 ]
-	then
-		echo "consistent"
-	else
-		echo "$o"
-	fi
-}
-
 function rm_add_commit_check {
 	current_commit="$1"
 	o_rm=$(git rm file1 file2 2>&1) || true
-	lock_exists_output='''fatal: Unable to create '"'"'/mnt/mydisk/.git/index.lock'"'"': File exists.
-				If no other git process is currently running, this probably means a
-				git process crashed in this repository earlier. Make sure no other git
-				process is running and remove the file manually to continue.'''
-	o_lock_exists=$(diff <(echo "$o_rm" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$lock_exists_output" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
+	lock_exists_output="Caused by: org.eclipse.jgit.errors.LockFailedException: Cannot lock /tmp/replayed_snapshot/.git/index"
+	o_lock_exists=$(grep "$lock_exists_output" <(echo "$o_rm") | wc -l)
 	if [ -f /mnt/mydisk/.git/index.lock ]
 	then
 		if [ $o_lock_exists -ne 0 ]
@@ -185,12 +165,12 @@ function rm_add_commit_check {
 			return
 		else
 			echo 1 > /tmp/lock_found
-			rm -f /mnt/mydisk/.git/index.lock
-			o_rm=$(git rm file1 file2 2>&1) || true
+			echo "consistentL"
+			return
 		fi
 	fi
 
-	o_consistent=$(echo "$o_rm" | grep -v '^rm' | wc -l)
+	o_consistent=$(echo "$o_rm" | grep -v '^$' | wc -l)
 	if [ $o_consistent -ne 0 ]
 	then
 		echo "$o_rm"
@@ -208,40 +188,26 @@ function rm_add_commit_check {
 	fi
 
 	o_commit=$(git commit -m "test3" 2>&1) || true
-	lock_exists_output='''fatal: Unable to create '"'"'/mnt/mydisk/.git/refs/heads/master.lock'"'"': File exists.
-				If no other git process is currently running, this probably means a
-				git process crashed in this repository earlier. Make sure no other git
-				process is running and remove the file manually to continue.'''
-	o_lock_exists=$(diff <(echo "$o_commit" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$lock_exists_output" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
+	lock_exists_output="Caused by: org.eclipse.jgit.errors.LockFailedException: Cannot lock /tmp/replayed_snapshot/.git/refs/heads/master"
+	o_lock_exists=$(grep "$lock_exists_output" <(echo "$o_commit") | wc -l)
 	if [ -f /mnt/mydisk/.git/refs/heads/master.lock ]
 	then
-		if [ $o_lock_exists -ne 0 ]
+		if [ $o_lock_exists -eq 0 ]
 		then
 			echo "$o_commit"
 			echo "inconsistent, no-lock-warning"
 			return
 		fi
 	fi
-	if [ $o_lock_exists -eq 0 ]
+	if [ $o_lock_exists -eq 1 ]
 	then
 		# lock actually does exist
 		echo 1 > /tmp/lock_found
-		rm -f /mnt/mydisk/.git/refs/heads/master.lock
-		o_commit=$(git commit -m "test3" 2>&1) || true
+		echo "consistentL"
+		return;
 	fi
-	o_correct_part='Committer: root <root@me>
-			Your name and email address were configured automatically based
-			on your username and hostname. Please check that they are accurate.
-			You can suppress this message by setting them explicitly:
-			git config --global user.name "Your Name"
-			git config --global user.email you@example.com
-			After doing this, you may fix the identity used for this commit with:
-			git commit --amend --reset-author
-			delete mode 100644 file1
-			delete mode 100644 file2
-			create mode 100644 file5'
-	o_correct_tmp=$(echo "$o_commit" | grep -v '^\[master' | grep -v 'create mode 100644 file[34]' | grep -v '[35] files changed, 1 insertion' | sed 's/[ \t]//g' | grep -v '^$')
-	o_consistent=$(diff <(echo "$o_correct_tmp") <(echo "$o_correct_part" | sed 's/[ \t]//g') | wc -l)
+	o_correct_part='[master ........................................] test3'
+	o_consistent=$(echo "$o_commit" | grep -v "[master ........................................] test3" | grep -v '^$' | wc -l)
 	if [ $o_consistent -ne 0 ]
 	then
 		echo "$o_commit"
@@ -315,14 +281,14 @@ function post_checks {
 		return
 	fi
 
-	if [ "$last_commit" != "b76cefa" ]
+	if [ "$last_commit" != "34cbd4e" ]
 	then
 		echo "consistent directory"
 		return
 	fi
 
-	o_checkout=$(git checkout b76cefa 2>&1)
-	correct_output='Note: checking out '"'"'b76cefa'"'"'.
+	o_checkout=$(git checkout 34cbd4e 2>&1)
+	correct_output='Note: checking out '"'"'34cbd4e'"'"'.
 			You are in '"'"'detached HEAD'"'"' state. You can look around, make experimental
 			changes and commit them, and you can discard any commits you make in this
 			state without impacting any branches by performing another checkout.
@@ -358,21 +324,17 @@ function post_checks {
 refs_log_check_output=$(refs_log_check)
 echo "refs_log_check: $refs_log_check_output"
 short_summary=$(echo $refs_log_check_output | awk -F ',' '{print $1}')
-
 last_commit=$(echo $refs_log_check_output | awk '{print $2}')
 
 status_check_output=$(status_check $last_commit)
 echo "status_check: $status_check_output"
 short_summary="$short_summary; $status_check_output"
 
-fsck_check_output=$(fsck_check)
-echo "fsck_check: $fsck_check_output"
-fsck_dangling_ignored=$(echo "$fsck_check_output" | sed 's/dangling.*$/dangling/g' | tr -d '\n')
-short_summary="$short_summary; $fsck_dangling_ignored"
-
 rm_add_commit_check_output=$(rm_add_commit_check $last_commit)
 echo "rm_add_commit_check: $rm_add_commit_check_output"
 short_summary="$short_summary; $rm_add_commit_check_output"
+
+exit
 
 post_checks_output=$(post_checks $last_commit)
 echo "post_checks: $post_checks_output"
