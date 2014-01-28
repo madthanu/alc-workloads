@@ -2,6 +2,7 @@
 ### All initialization stuff
 trap 'echo Bash error:$0 $1:${LINENO}' ERR
 set -e
+orig_wd=$(pwd)
 
 if [ $# -ne 1 ]
 then
@@ -27,7 +28,7 @@ cd /mnt/mydisk
 echo 0 > /tmp/lock_found
 
 function git {
-	/root/application_fs_bugs/alc-workloads/jgit/org.eclipse.jgit.pgm-3.2.0.201312181205-r.sh "$@"
+	"$orig_wd"/org.eclipse.jgit.pgm-3.2.0.201312181205-r.sh "$@"
 }
 
 function refs_log_check {
@@ -52,6 +53,8 @@ function refs_log_check {
 	o2_c1='34cbd4e HEAD@{0}: commit: test2
 		e318e4a HEAD@{1}: commit (initial): test1'
 	o2_c2='e318e4a HEAD@{0}: commit (initial): test1'
+
+	echo "$o2"
 
 	o3=$(git log 2>&1)
 	o3_c1='commit 34cbd4e9e9e252c2feac87c3d36edd7967b9c6be
@@ -206,8 +209,7 @@ function rm_add_commit_check {
 		echo "consistentL"
 		return;
 	fi
-	o_correct_part='[master ........................................] test3'
-	o_consistent=$(echo "$o_commit" | grep -ev "[master ........................................] test3" | grep -v '^$' | wc -l)
+	o_consistent=$(echo "$o_commit" | grep -v "\[master ........................................\] test3" | grep -v '^$' | wc -l)
 	if [ $o_consistent -ne 0 ]
 	then
 		echo "$o_commit"
@@ -231,6 +233,22 @@ function post_checks {
 	last_commit="$1"
 
 	ls_output=$(ls -o | awk '{print $4 " " $8}' | grep -v '^ $')
+	if [ $(cat /tmp/lock_found) -eq 1 ]
+	then
+		correct_output='20960 file1
+				20960 file2
+				20960 file3
+				20960 file4'
+		o_correct=$(diff <(echo "$correct_output" | sed 's/[ \t]//g') <(echo "$ls_output" | sed 's/[ \t]//g') | wc -l)
+		if [ $o_correct -ne 0 ]
+		then
+			echo "inconsistent directoryL"
+		else
+			echo "consistent directoryL"
+		fi
+		return
+	fi
+
 	correct_output='20960 file3
 			20960 file4
 			6 file5'
@@ -247,6 +265,7 @@ function post_checks {
 	o_correct=$(echo "$o_checkout" | grep -v '^$' | wc -l)
 	if [ $o_correct -ne 0 ]
 	then
+		echo "$o_checkout"
 		echo "inconsistent checkout, first commit"
 		return
 	fi
@@ -279,7 +298,6 @@ function post_checks {
 	fi
 
 	o_checkout=$(git checkout 34cbd4e 2>&1)
-	echo "$o_checkout"
 	o_correct=$(echo "$o_checkout" | grep -v '^$' | wc -l)
 	if [ $o_correct -ne 0 ]
 	then
