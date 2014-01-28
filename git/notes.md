@@ -1,4 +1,5 @@
-Introduction:
+Introduction
+------------
 
 Git has a configuration option called 'core.fsyncobjectfiles'. This option is switched off by default. Without this option, Git mostly does not perform any syncing operation; in the workload considered, git never syncs without this option. For finding bugs, the workload was run with this option switched on.
 
