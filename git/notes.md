@@ -1,11 +1,18 @@
 Introduction
 ------------
 
-With Git, many workloads can be tested for bugs, and many correctness checks can be performed. I tested for a simple workload: in a pre-existing repository with some existing files, the workload did a 'git add' of two files, followed by a 'git commit'. It is possible that many more bugs exist with other workloads, but I believe they will follow the same pattern as the discovered bugs.
+Git provides many commands that can be used on a code repository; thus, many workloads can be tested for bugs, and many correctness checks can be performed. I tested for a simple workload: in a pre-existing repository with some existing files, the workload did a 'git add' of two files, followed by a 'git commit'. The workload and correctness checks used are described in detail in subsequent paragraphs. It is possible that more bugs exist with other workloads, but I am guessing about 50% of the total bugs in git will follow the same pattern as the discovered bugs.
 
-Git has a configuration option called 'core.fsyncobjectfiles'. This option is switched off by default. Without this option, Git mostly does not perform any syncing operation; in the workload considered, git never syncs without this option. For finding bugs, the workload was run with this option switched on.
+Git has a configuration option called 'core.fsyncobjectfiles'. This option is switched off by default. Without this option, Git mostly does not perform any sync()-like operation; in the workload considered, git never syncs without this option. For finding bugs, the workload was run with this option switched on.
 
-Aside: In Git, there is a problem in separating durability and consistency. The usual definition of consistency, as with other applications, would be that previous commits are retrievable, even if the last few commits are not. However, consider the situation where the user commits to git, then rewrites actual code files; if the last commit was not 'durable', the repository might be left in a state where the code files are updated, but the last commit is lost silently.
+**Unofficial ALC guarantee (as told by Git developers):** Git should work correctly on any file system that orders meta-data and data writes, even without 'core.fsyncobjectfiles'. For file systems that do not maintain order, switching on the fsyncs is a good idea, even though the state is "often" recoverable *manually* (i.e., by a git developer-expert) even if the syncs are not switched on. (These 'unofficial guarantees were obtained from some emails listed in subsequent sections.)
+
+Developer assumptions and opinions
+----------------------------------
+
+* I find from my experiments that, except for issue (1) described in the subsequent paragraphs, the former assumption (ordering file system doesn't need 'core.fsyncobjectfiles') is entirely correct. The second assumption would be correct, for *common* non-reordering filesystems, if we define "recovery" to recover only to a consistent state (without considering durability) - git does not delete old old object files, so if the last commit is corrupted, manual recovery to the previous commit is possible. Jeff King (a Git developer) correctly guesses possible errors that might happen in a common re-ordering file system.
+
+  However, for non common re-ordering file systems, even manual recovery might not be possible, since Git appends to certain meta-information logs (such as './git/logs/HEAD') and overwrites some meta-information pointer files (such as '.git/refs/heads/master'); crazy file systems might even leave the entire contents of these file as garbage when they are being edited. (I assume you have a sensible notion of recovery; deleting the entire repository to get a "consistent" but empty repository, is BS.)
 
 The emails listed next (from the Git mailing list) provide information on developer assumptions and opinions about system crash recovery in Git. The description of 'core.fsyncobjectfiles' in the manpage of 'git-config' also provides information.
 
@@ -13,62 +20,69 @@ The emails listed next (from the Git mailing list) provide information on develo
 * http://marc.info/?l=git&m=137489462314389&w=2
 * http://marc.info/?l=git&m=133573931013962&w=2
 
-Developer assumptions and opinions
-----------------------------------
-
-* Git should work correctly on any file system that orders meta-data and data writes, even without 'core.fsyncobjectfiles'. For file systems that do not maintain order, switching on the fsyncs is a good idea, even though the state is "often" recoverable *manually* (i.e., by a git developer-expert) even if the fsyncs are not switched on.
-
-  From my experiments, I believe that, except for issue (1) described in the subsequent paragraphs, the former assumption is entirely correct (ordering file system doesn't need 'core.fsyncobjectfiles'). The second assumption would be correct, for common non-reordering filesystems, if we define "recovery" to recover only to a consistent state, without considering durability - git does not delete old old object files, so if the last commit is screwed up, manual recovery to the previous commit is always possible. Jeff King correctly guesses possible errors that might happen in a common re-ordering file system.
-
-  However, for non common re-ordering file systems, even manual recovery might not be possible, since Git appends to certain meta-information logs (such as './git/logs/HEAD') and overwrites some meta-information pointer files (such as '.git/refs/heads/master'); crazy file systems might even leave the entire contents of these file as garbage when they are being edited. (I assume you have a sensible notion of recovery; deleting the entire repository to get a "consistent" but empty repository, is BS.)
-
-* From the manpage description of core.fsyncobjectfiles, and a mail from the mailing list, I believe Torvalds (during 2009) had the following opinion about the term 'journaled file systems': journaling maintains ordering.  I have encountered similar definitions of 'journaled file systems' from my interaction with the LevelDB developer community. It will be interesting to know whether file system developers or researchers agree with this.
+* **Opinion on the term 'journaled file systems'**: From the manpage description of core.fsyncobjectfiles, and a 2009 email by Torvalds, the following opinion seems to be expressed: journaling maintains (system-call level) ordering.  I have encountered similar definitions of 'journaled file systems' from my interaction with the LevelDB developer community. Also, the apparent reason data ordering cannot be relied upon, in normal journaling file systems, is because they don't provide data journaling, but only metadata journaling. It will be interesting to know whether file system developers or researchers agree with this. I'm unsure whether application developers consider Btrfs as a journaling file system.
 
 * The manpage entry for 'core.fsyncobjectfiles' seems to assume that the user knows the behavior of the underlying file system (akin to knowledge necessary for SQLite config options). While core.fsyncobjectfiles is not necessary for ext3-ordered, it is needed for automatic recovery in ext4, btrfs, and probably most other modern file systems; even manual recovery of the last commit is not possible with the option switched off. Torvalds is hopefully aware of this, but there doesn't seem to be any e-mail in the mailing list that discusses the issue (in the post-2009 era), and the option is still switched off by default.
 
 Issues
 ------
 
-1. In the tested workload, Git first appends some data to the end of a file (".git/logs/HEAD"), and then renames a file(".git/refs/heads/master.lock" -> ".git/refs/heads/master"). The former operation (append) will typically not result in more blocks being added to the file; only about 128 bytes are appended. The rename is part of an atomic file content replacement sequence for the "...master" file; the creation and write to the temporary file ('master.lock') for the file content replacement, happens before the append operation talked about previously.
+1. In the tested workload, Git first appends some data to the end of a file, and then renames another file. For correct operation, both the rename and the append has to be atomic.
 
-   For correct operation, both the rename and the append has to be atomic. Correctness is affected (seemingly, as described next) if either only the rename or only the append ends up on disk (or when the append partially gets to disk). This would, of course, mean that correctness will also be affected if the process gets killed (i.e., without a system crash) after the append and before the rename; however, the time window for such a kill is small. With a file system that decides to buffer either the rename or the append, but sends the other operation immediately to disk, the time window (of a system crash that affects correctness) will be considerable.
+   *Details:* The appended file is ".git/logs/HEAD", and the rename is (".git/refs/heads/master.lock" -> ".git/refs/heads/master"). The former operation (append) will typically not result in more blocks being added to the file; only about 128 bytes are appended. The rename is part of an atomic overwrite sequence for the "...master" file; the creation and write to the temporary file ('master.lock') happens before the previous append operation talked about previously. I believe that the developers intended to do the append in an isolated (i.e., atomic wrt other processes) fashion, and use the temporary file 'master.lock' as a lock for the purpose. (Thus, 'master.lock' serves two purposes: temporary file, and a lock.)
 
-   If the the rename does not occur, but the append does, git reports (on the next git operation, after reboot in the case of a system crash) the existence of the 'master.lock' file, and refuses to continue. However, the user is told that 'master.lock' exists probably because another git process is running simultaneously; if the user is sure that another process is not running, the file should be removed, and git can continue. I tested for correctness after removing the master.lock file.
+   Correctness is affected if either only the rename or only the append ends up on disk (or when the append partially gets to disk). This would, of course, mean that correctness will also be affected if the process gets killed (i.e., without a system crash) after the append and before the rename; however, the time window that affects correctness during such such a kill is small. When a file system decides to buffer either the rename or the append, but sends the other operation immediately to disk, the time window will be considerable.
 
-   If the operation is not atomic, git ref-log shows wrong meta-information (without reporting any corruption), but other tested correctness checks did not report any problems (except the master.lock indication). I do not know the seriousness of this bug, though silently giving wrong meta-information is ominous.
+   If the append reaches the disk but the rename does not, Git (during recovery) warns about the existence of a 'master.lock' file. Rename reaching the disk first does not generate a warning.
 
-   I believe (haven't tested yet) that this bug would practically occur on Btrfs, and may be on Ext4-ordered. Btrfs forces renames to disk immediately, while the append might still be buffered. With Ext4-ordered, delayed allocation might have a similar effect; however, I do not know delayed allocation's effects when file size is increased without allocating newer blocks.
+   *Consequence:* If the bug occurs, the 'git ref-log' command shows wrong meta-information about the repository. Other tested correctness checks did not report any problems (except master.lock existence). I do not know the seriousness of this bug, though silently giving wrong meta-information is ominous.
 
-   1. There is also another file (".git/logs/refs/heads/master") that is appended before the rename of 'master.lock'. I tried re-ordering this file before or after the rename, but there was no effect on any of the tested correctness checks; probably indicates we can use more correctness checks.
+   In the specific case where the rename does not occur, but the append does, for certain checks other than 'git ref-log', Git reports the existence of the 'master.lock' file and refuses to continue. However, the user is told that 'master.lock' exists probably because another git process is running simultaneously; if the user is sure that another process is not running, the file should be removed, and Git can continue. Removing the master.lock file results in those checks working correctly (again, 'git ref-log' still reports wrong meta information, always).
 
-2. There are two atomic file replacement sequences in the tested workloads (".git/index.lock" -> ".git/index", and ".git/refs/heads/master.lock" -> ".git/refs/heads/master"). Neither of these fsync the appropriate file data before the rename. 
+   *Exposed in actual file systems?* I believe (haven't tested yet) that this bug would practically occur on Btrfs, and may be on Ext4-ordered. Btrfs forces renames to disk immediately, while the append might still be buffered. With Ext4-ordered, delayed allocation might have a similar effect; however, I do not know delayed allocation's effects when file size is increased without allocating newer blocks.
 
-   If the file data does not get to disk (i.e., the file is empty or contains garbage), a lot of corruption is reported.
+   *Note:* There is also another file (".git/logs/refs/heads/master") that is appended in an isolated fashion, before the rename of 'master.lock'. I tried re-ordering this file before or after the rename, but there was no effect on any of the tested correctness checks; probably indicates we can use more correctness checks.
 
-   The bug would happen on any file system not considering the creat()->write()->rename() file replacement sequence.
+2. There are two atomic overwrite sequences in the tested workloads. Neither of these fsync() the appropriate file data before the rename. Data needs to be ordered before the renames for correctness.
 
-3. Before each of the atomic file *replacement* scenarios described in (2), Git does additional atomic *file creations* (for a few files) using the following protocol: Git creates a temporary file, fills the temporary file with data, does an fsync() on the temporary file, then link()-s the temporary files to permanent-file-names. The permanent file names will be referred (indirectly) by pointers written to the atomically *replaced* file from (2). (By file *creation*, I mean, the permanent file names, i.e., the destinations in the link() calls, do not previously exist).  After the link, the temporary files are unlink()-ed.
+   *Details:* The renames are (".git/index.lock" -> ".git/index", and ".git/refs/heads/master.lock" -> ".git/refs/heads/master"). 
 
-   For correct operation, the link() of the file creations must go to disk before the rename() of the file replacement does. If this does not happen for the 'master.lock' file's rename in (2), lots of corruption are reported. If it does not happen for 'index.lock', a missing blob error is reported by 'git fsck', but there is non-deterministic behavior for the rest of the correctness checks. Most of the times, other correctness checks don't report anything wrong; however, sometimes, they do. (More specifically, 'git rm' reports 'invalid object for fileX, error building trees').
+   *Consequence:* A lot of corruption is reported.
 
-   Note that, curiosly, there was no system-crash-specific necessity for the file creation to be done using the tempfile-link() sequence. So long as the rename() does not go to disk, it wouldn't matter if the linked-file was half written, or filled with garbage. Specifically, things wouldn't be any different in a file system with a non-atomic link() call (if the call leaves the file in a half-written state). I believe the link() call was used to prevent simultaneously-active git processes from performing 'git-commit' at the same time; link() can be used to detect if another active process raced and created the object file.
+   *Exposed in actual file systems?* No, as far as we know.
 
-  This bug might be exposed under Btrfs.
+3. In a few situations, Git first does a link(), then atomically overwrites another file using rename(). There is no fsync() between the link and the rename. However, for correct operations, the link() needs to reach the disk first before the rename.
 
-4. In the workload, Git creates and renames two files ('index.lock' and 'master.lock'). The first rename ('index.lock') is part of 'git add', while the second rename is part of 'git commit'. 'git add' and 'git commit' together constitute the tested workload.
+   *Details:* Before each of the atomic file *overwrite* scenarios described in issue (2), Git does additional atomic file *creations* (two file creations per overwrite) using the following protocol: Git creates a temporary file, fills the temporary file with data, does an fsync() on the temporary file, then link()-s the temporary files to permanent-file-names. The permanent file names are (I'm guessing) referred by the overwritten data (written to the renamed file). (By file *creation*, I mean, the permanent file names, i.e., the destinations in the link() calls, do not previously exist).  After the link, the temporary files are unlink()-ed.
 
-   If the first rename does not go to the disk, but the second does, git's staging index is in a funny, but usable state; the stage looks like an invisible ghost did an additional 'git rm --cached' on files added using 'git add' previously. However, the final commit done using 'git commit' remains the same. I do not know the seriousness of this bug.
+   *Consequence:* The consequence of the bug is different for the two overwritten files. For the overwrite of 'master.lock', if either of the two corresponding links do not get to disk, lots of corruption are reported. For 'index.lock', a missing blob error is reported by 'git fsck', but there is non-deterministic behavior for other correctness checks ('git rm', depending on its mood, might report 'invalid object for fileX, error building trees').
 
-   I believe this bug will not be exposed under any of our currently studied file systems.
+   *Note:* As far as I can understand, the tempfile-link() sequence does not help in any way with system-crash-specific consistency guarantees. The only requirement that Git needs for system-crash guarantees, is that both the data of the created files, and the (permanent) name of the file, are fully in disk before the rename() call. This could have been achieved by directly creating a file under the permanent file name, writing the new data to it, and then doing an fsync() on the created file (plus, taking care of safe new file flush). I am guessing (from some of the emails listed in subsequent sections) the link() call was used to prevent simultaneously-active git processes from performing operations at the same time. This also explains why link() is used instead of rename(): link() can detect if another active process raced and created the file first.
 
-5. Consider the temporary files created, and then link()-ed under a permanent name in (3). Git creates one new directory corresponding to each of these files, and then puts the temporary file (and the corresponding permanent file too) in that new directory. The directories are created using mkdir().
+   *Exposed in actual file systems?* This bug will probably be exposed under Btrfs (haven't tested yet).
 
-   For correct operation, the mkdir() must persist (similar to the link()) before the corresponding renames. For this to happen, I believe Linux requires doing an fsync() on the parent directory.
+4. In the workload, Git creates and renames two files. The first rename should go to disk first before the second rename.
 
-   If the mkdir() does not get persisted before the corresponding rename, the same effects as link() not being persisted in (3), will happen.
+   *Details:* The first rename ('index.lock') is part of 'git add', while the second rename ('master.lock') is part of 'git commit'.
 
-   I believe this bug will not be exposed under any of our currently studied file systems.
+   *Consequence:* Git's staging index is in a funny, but usable state; the stage looks like some ghost did an additional 'git rm --cached' on those files previously added using 'git add'. Everything else works properly. I do not know about the seriousness of this bug.
 
-   1. Git also never does an fsync() on a newly created file. However, since all newly created files (that we observe in the tested workload) are temporary files that will subsequently be link()-ed or rename()-ed to a permanent file, only the link() or the rename() might need to be fsync()-ed.
+   *Note:* The rename of 'index.lock' is done first, as part of 'git add'. However, as the first step 'git commit', 'index.lock' is created and then immediately unlinked. I do not understand why git commit does this. My best guess is that, during 'git commit',  Git checks for the existence of 'index.lock' (i.e., whether the create call succeeds), and then proceeds only if the lock doesn't exist (we are talking about the workload phase here, before any crashes, so the rename() call of 'git add' would make sure that the lock does not exist). When a crash happens, if only the rename of 'index.lock' does not go to the disk (the create and unlink did end up in the disk), then the consequence described in the previous paragraph would directly result. However, if the create and the unlink are also lost, Git will indicate the existence of 'index.lock' with certain checks, similar to issue (1).
 
-6. Beyond a final rename call, Git does not perform any sync operation. This will give delayed durability, typically after 5 seconds or 30 seconds. However, some file systems might decide to prevent durability for a longer time.
+   *Exposed in actual file systems?* No, as far as we know.
+
+5. The workload involves a few mkdir()-s, and then file creations within the new directory. The parent directory of the mkdir() needs to be fsync()-ed for correctness. (Safe new file flush for directories).
+
+   *Details:* Consider the temporary files created, and then link()-ed under a permanent name in issue (3). Git creates one new directory corresponding to each of these files (using mkdir() ), and then puts the temporary file (and the corresponding permanent file too) in that new directory. For correct operation, the mkdir() must persist (similar to the link()) before the corresponding renames. For this to happen, I believe Linux requires doing an fsync() on the parent directory.
+
+   Note that, for the file creation itself, safe new file flush is not specifically a problem: the required fsync() after the link() would also cover the creation of the file. (Of course, that required fsync() is also not present in Git, as detailed in issue 3.)
+ 
+   *Consequence:* The same as link() not being persisted in issue (3).
+
+   *Exposed in actual file systems?* No, as far as we know.
+
+6. Beyond a final rename call, Git does not perform any sync operation. This will only give delayed durability, typically after 5 seconds or 30 seconds. Some file systems might decide to prevent durability for a longer time.
+
+   *Note:* In Git, there is a problem in separating durability and consistency. The usual definition of consistency, as in other applications, would be that previous commits are retrievable, even if the last few commits are not. However, consider the situation where the user commits to git, then rewrites actual code files; if the last commit was not durable, the repository might be left in a state where the code files are updated, but the last commit is lost silently.
+
+7. 
