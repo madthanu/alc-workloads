@@ -12,6 +12,7 @@ rm -rf /mnt/mydisk
 mkdir -p /mnt/mydisk
 cd /mnt/mydisk
 git init .
+git config core.fsyncobjectfiles true
 echo hello > file1
 
 ### SNAPSHOTING INITIAL STATE BEFORE WORKLOAD
