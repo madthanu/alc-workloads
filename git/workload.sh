@@ -27,6 +27,7 @@ function do_workload {
 		git add .
 	strace -s 10 -ff -tt -o "$wd"/tmp/strace.out \
 		git commit -m "test2"
+	git log | grep '^commit' | awk '{print $2}' > "$wd"/tmp/checker_params
 }
 
 initialize_workload
