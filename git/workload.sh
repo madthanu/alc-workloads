@@ -23,10 +23,11 @@ function initialize_workload {
 
 function do_workload {
 	cp -R /mnt/mydisk "$wd"/tmp/snapshot
-	strace -s 10 -ff -tt -o "$wd"/tmp/strace.out \
+	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		git add .
-	strace -s 10 -ff -tt -o "$wd"/tmp/strace.out \
+	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		git commit -m "test2"
+	git log | grep '^commit' | awk '{print $2}' > "$wd"/tmp/checker_params
 }
 
 initialize_workload
