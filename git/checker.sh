@@ -15,8 +15,20 @@ else
 	replayed_snapshot="$(pwd)/$1"
 fi
 
-### Actual program checker
-alias git='/root/application_fs_bugs/git/installation/bin/git'
+### Initialize workload parameters
+second_commit_long=$(head -1 tmp/checker_params)
+first_commit_long=$(tail -1 tmp/checker_params)
+second_commit_short=$(head -1 tmp/checker_params | awk '{print substr($1, 0, 7)'})
+first_commit_short=$(tail -1 tmp/checker_params | awk '{print substr($1, 0, 7)'})
+
+if [ $first_commit_long == '' ] || [ $second_commit_long == '' ]
+then
+	echo "ERROR: Checker parameters not initialized by workload script."
+	echo "ERROR: Checker parameters not initialized by workload script." > /tmp/short_output
+	exit 1
+fi
+
+### Initializing directories
 rm -rf /mnt/mydisk
 cp -R "$replayed_snapshot" /mnt/mydisk
 rm -rf /tmp/scratchpad
@@ -24,9 +36,10 @@ cp -R "$replayed_snapshot" /tmp/scratchpad
 echo "not done" > /tmp/short_output
 cd /mnt/mydisk
 
-
+### Variable to track whether a lock existed in this crash scenario
 echo 0 > /tmp/lock_found
 
+### Actual checkers
 function refs_log_check {
 	function matches {
 		str1="$1"
@@ -40,31 +53,28 @@ function refs_log_check {
 		fi
 	}
 	o1=$(git show-ref 2>&1)
-	o1_c1='b76cefac9298a1b1e5836eb553d89dcb94b831ec refs/heads/master'
-	o1_c2='ed472578156e8eacbe9af5dce6d27ecf234a2468 refs/heads/master'
+	o1_c1="$second_commit_long refs/heads/master"
+	o1_c2="$first_commit_long refs/heads/master"
 
 	o2=$(git show-ref -h HEAD 2>&1)
-	o2_c1='b76cefac9298a1b1e5836eb553d89dcb94b831ec HEAD'
-	o2_c2='ed472578156e8eacbe9af5dce6d27ecf234a2468 HEAD'
+	o2_c1="$second_commit_long HEAD"
+	o2_c2="$first_commit_long HEAD"
 
 	o3=$(git reflog 2>&1)
-	o3_c1='b76cefa HEAD@{0}: commit: test2
-		ed47257 HEAD@{1}: commit (initial): test1'
-	o3_c2='ed47257 HEAD@{0}: commit (initial): test1'
+	o3_c1="$second_commit_short HEAD@{0}: commit: test2
+		$first_commit_short HEAD@{1}: commit (initial): test1"
+	o3_c2="$first_commit_short HEAD@{0}: commit (initial): test1"
 
-	o4=$(git log 2>&1)
-	o4_c1='commit b76cefac9298a1b1e5836eb553d89dcb94b831ec
+	o4=$(git log 2>&1 | grep -v Date)
+	o4_c1="commit $second_commit_long
 		Author: root <root@me>
-		Date:   Thu Jan 9 16:18:11 2014 -0600
 		test2
-		commit ed472578156e8eacbe9af5dce6d27ecf234a2468
+		commit $first_commit_long
 		Author: root <root@me>
-		Date:   Thu Jan 9 16:18:11 2014 -0600
-		test1'
-	o4_c2='commit ed472578156e8eacbe9af5dce6d27ecf234a2468
+		test1"
+	o4_c2="commit $first_commit_long
 		Author: root <root@me>
-		Date:   Thu Jan 9 16:18:11 2014 -0600
-		test1'
+		test1"
 	if [ $(matches "$o1" "$o1_c1") -eq 0 ] && [ $(matches "$o1" "$o1_c2") -eq 0 ]
 	then
 		echo "insane o1"
@@ -77,6 +87,8 @@ function refs_log_check {
 	fi
 	if [ $(matches "$o3" "$o3_c1") -eq 0 ] && [ $(matches "$o3" "$o3_c2") -eq 0 ]
 	then
+		echo "$o3"
+		echo "$o3_c1"
 		echo "insane o3"
 		return
 	fi
@@ -101,7 +113,7 @@ function status_check {
 	last_commit="$1"
 
 	o_status=$(git status 2>&1)
-	if [ "$last_commit" == "b76cefa" ]
+	if [ "$last_commit" == "$second_commit_short" ]
 	then
 		correct_output='# On branch master
 				nothing to commit (working directory clean)'
@@ -277,15 +289,15 @@ function post_checks {
 	check_data file3 "after all commit operations"
 	check_data file4 "after all commit operations"
 
-	o_checkout=$(git checkout ed47257 2>&1)
-	correct_output='Note: checking out '"'"'ed47257'"'"'.
-			You are in '"'"'detached HEAD'"'"' state. You can look around, make experimental
+	o_checkout=$(git checkout $first_commit_short 2>&1)
+	correct_output="Note: checking out '$first_commit_short'.
+			You are in 'detached HEAD' state. You can look around, make experimental
 			changes and commit them, and you can discard any commits you make in this
 			state without impacting any branches by performing another checkout.
 			If you want to create a new branch to retain commits you create, you may
 			do so (now or later) by using -b with the checkout command again. Example:
 			git checkout -b new_branch_name
-			HEAD is now at ed47257... test1'
+			HEAD is now at $first_commit_short... test1"
 	o_correct=$(diff <(echo "$correct_output" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$o_checkout" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
 	if [ $o_correct -ne 0 ]
 	then
@@ -306,8 +318,8 @@ function post_checks {
 	check_data file2 "after checking out first commit"
 
 	o_checkout=$(git checkout master 2>&1)
-	correct_output='Previous HEAD position was ed47257... test1
-			Switched to branch '"'"'master'"'"''
+	correct_output="Previous HEAD position was $first_commit_short... test1
+			Switched to branch 'master'"
 	o_correct=$(diff <(echo "$correct_output" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$o_checkout" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
 	if [ $o_correct -ne 0 ]
 	then
@@ -315,21 +327,21 @@ function post_checks {
 		return
 	fi
 
-	if [ "$last_commit" != "b76cefa" ]
+	if [ "$last_commit" != "$second_commit_short" ]
 	then
 		echo "consistent directory"
 		return
 	fi
 
-	o_checkout=$(git checkout b76cefa 2>&1)
-	correct_output='Note: checking out '"'"'b76cefa'"'"'.
-			You are in '"'"'detached HEAD'"'"' state. You can look around, make experimental
+	o_checkout=$(git checkout $second_commit_short 2>&1)
+	correct_output="Note: checking out '$second_commit_short'.
+			You are in 'detached HEAD' state. You can look around, make experimental
 			changes and commit them, and you can discard any commits you make in this
 			state without impacting any branches by performing another checkout.
 			If you want to create a new branch to retain commits you create, you may
 			do so (now or later) by using -b with the checkout command again. Example:
 			git checkout -b new_branch_name
-			HEAD is now at b76cefa... test2'
+			HEAD is now at $second_commit_short... test2"
 	o_correct=$(diff <(echo "$correct_output" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$o_checkout" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
 	if [ $o_correct -ne 0 ]
 	then
