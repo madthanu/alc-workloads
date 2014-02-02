@@ -39,6 +39,16 @@ cd /mnt/mydisk
 
 ### Variable to track whether a lock existed in this crash scenario
 echo 0 > /tmp/lock_found
+echo 0 > /tmp/timed_out
+
+function git {
+	timeout -k 1 2 git "$@"
+	if [ $? -eq 124 ]
+	then
+		echo "timeout"
+		echo 1 > /tmp/timed_out
+	fi
+}
 
 ### Actual checkers
 function refs_log_check {
@@ -88,8 +98,6 @@ function refs_log_check {
 	fi
 	if [ $(matches "$o3" "$o3_c1") -eq 0 ] && [ $(matches "$o3" "$o3_c2") -eq 0 ]
 	then
-		echo "$o3"
-		echo "$o3_c1"
 		echo "insane o3"
 		return
 	fi
@@ -206,7 +214,6 @@ function rm_add_commit_check {
 	o_consistent=$(echo "$o_rm" | grep -v '^rm' | wc -l)
 	if [ $o_consistent -ne 0 ]
 	then
-		echo "$o_rm"
 		echo "inconsistent, git-rm"
 		return
 	fi
@@ -230,7 +237,6 @@ function rm_add_commit_check {
 	then
 		if [ $o_lock_exists -ne 0 ]
 		then
-			echo "$o_commit"
 			echo "inconsistent, no-lock-warning"
 			return
 		fi
@@ -257,7 +263,6 @@ function rm_add_commit_check {
 	o_consistent=$(diff <(echo "$o_correct_tmp") <(echo "$o_correct_part" | sed 's/[ \t]//g') | wc -l)
 	if [ $o_consistent -ne 0 ]
 	then
-		echo "$o_commit"
 		echo "inconsistent, git-commit"
 		return
 	fi
@@ -380,7 +385,11 @@ short_summary="$short_summary; $status_check_output"
 
 fsck_check_output=$(fsck_check)
 echo "fsck_check: $fsck_check_output"
-fsck_dangling_ignored=$(echo "$fsck_check_output" | sed 's/dangling.*$/dangling/g' | tr -d '\n')
+fsck_dangling_ignored=$(echo "$fsck_check_output" | sed 's/dangling.*$/D/g' | tr -d '\n' | sed 's/^D+$/consistentD/g')
+if [ "$fsck_dangling_ignored" != "consistent" ] && [ "$fsck_dangling_ignored" != "consistentD" ]
+then
+	fsck_dangling_ignored="error"
+fi
 short_summary="$short_summary; $fsck_dangling_ignored"
 
 rm_add_commit_check_output=$(rm_add_commit_check $last_commit)
@@ -395,6 +404,12 @@ echo "lock_found: $(cat /tmp/lock_found)"
 if [ $(cat /tmp/lock_found) -eq 1 ]
 then
 	short_summary="$short_summary; L"
+fi
+
+echo "timed_out: $(cat /tmp/timed_out)"
+if [ $(cat /tmp/timed_out) -eq 1 ]
+then
+	short_summary="$short_summary; T"
 fi
 
 echo "$short_summary" | sed 's/consistent/C/g' | sed 's/dangling/D/g' | sed 's/directory/dir/g' | sed 's/both tracked/T/g' | sed 's/both untracked/U/g' > /tmp/short_output
