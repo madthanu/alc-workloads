@@ -1,7 +1,7 @@
 Introduction
 ------------
 
-Git provides many commands that can be used on a code repository; thus, many workloads can be tested for bugs, and many correctness checks can be performed. I tested for a simple workload: in a pre-existing repository with some existing files, the workload did a 'git add' of two files, followed by a 'git commit'. The workload and correctness checks used are described in detail in subsequent paragraphs. It is possible that more bugs exist with other workloads, but I am guessing about 50% of the total bugs in git will follow the same pattern as the discovered bugs.
+Git provides many commands that can be used on a code repository; thus, many workloads can be tested for bugs, and many correctness checks can be performed. I tested for a simple workload: in a pre-existing repository with some existing files, the workload did a 'git add' of two files, followed by a 'git commit'. The workload and correctness checks used are described in detail in subsequent sections. It is possible that more bugs exist with other workloads, but I am guessing about 50% of the total bugs in git will follow the same pattern as the discovered bugs.
 
 Git has a configuration option called 'core.fsyncobjectfiles'. This option is switched off by default. Without this option, Git mostly does not perform any sync()-like operation; in the workload considered, git never syncs without this option. For finding bugs, the workload was run with this option switched on.
 
@@ -43,7 +43,7 @@ Issues
 
 2. There are two atomic overwrite sequences in the tested workloads. Neither of these fsync() the appropriate file data before the rename. Data needs to be ordered before the renames for correctness.
 
-   *Details:* The renames are (".git/index.lock" -> ".git/index", and ".git/refs/heads/master.lock" -> ".git/refs/heads/master"). 
+   *Details:* The renames are (".git/index.lock" -> ".git/index"), and (".git/refs/heads/master.lock" -> ".git/refs/heads/master"). 
 
    *Consequence:* A lot of corruption is reported.
 
@@ -83,4 +83,12 @@ Issues
 
    *Note:* In Git, there is a problem in separating durability and consistency. The usual definition of consistency, as in other applications, would be that previous commits are retrievable, even if the last few commits are not. However, consider the situation where the user commits to git, then rewrites actual code files; if the last commit was not durable, the repository might be left in a state where the code files are updated, but the last commit is lost silently.
 
-7. 
+7. There are four files in total that Git creates using the *create(tmp); write(tmp); fsync(tmp); link(tmp->permanent);* sequence. The fsync() is left out by default, and requires the core.fsyncobjectfiles option. If the fsync() is left out, correctness is affected.
+
+   *Details:* Two link()-creations correspond to each of the two renames in the workload. If the renames get to the disk before the data of the created files, various errors are produced.
+
+   *Consequence:* If the data of either of the two files corresponding to the first rename are not persisted, but the rename ends up in disk, different errors occur depending on which parts of the files end up in disk. If none of the data is persisted, and the file size is not increased (remains at zero), 'git fsck' and 'git checkout' both detect the situation and inform the user. If the file size increases to the size of the data, but the contents of the file contain zero or garbage, 'git fsck' and 'git checkout' non-deterministically report errors. If the file size increases partially and the correct data is filled up till that size, 'git checkout' is stuck in an infinite loop, while 'git fsck' still non-deterministically reports errors. In all cases, checkers other than 'git fsck' and 'git checkout' run correctly.
+
+  For the second rename, for the zero-size, the garbage-filled, and the zero-filled cases, the checkers produce non-deterministic error reports. For the first file, all checkers except the log checks produces non-deterministic errors; for the second file, all checkers produce non-deterministic output. For the second rename, I did not test the case where the size increases partially, but data is filled up till that size. (For the second rename, the file creations are done with a single write call each, while for the first rename, the file creations had multiple write calls.)
+
+   *Exposed in actual file systems?* Btrfs, Ext4.
