@@ -1,31 +1,16 @@
 Introduction
 ------------
 
-Git provides many commands that can be used on a code repository; thus, many workloads can be tested for bugs, and many correctness checks can be performed. I tested for a simple workload: in a pre-existing repository with some existing files, the workload did a 'git add' of two files, followed by a 'git commit'. The workload and correctness checks used are described in detail in subsequent sections. It is possible that more bugs exist with other workloads, but I am guessing about 50% of the total bugs in git will follow the same pattern as the discovered bugs.
+Git provides many commands that can be used on a code repository; thus, many workloads can be tested for bugs, and many correctness checks can be performed. I tested for a simple workload: in a pre-existing repository with some existing files, the workload did a 'git add' of two files, followed by a 'git commit'. It is possible that more bugs exist with other workloads, but I am guessing about 50% of the total bugs in git will follow the same pattern as the discovered bugs.
 
 Git has a configuration option called 'core.fsyncobjectfiles'. This option is switched off by default. Without this option, Git mostly does not perform any sync()-like operation; in the workload considered, git never syncs without this option. For finding bugs, the workload was run with this option switched on.
 
-**Unofficial ALC guarantee (as told by Git developers):** Git should work correctly on any file system that orders meta-data and data writes, even without 'core.fsyncobjectfiles'. For file systems that do not maintain order, switching on the fsyncs is a good idea, even though the state is "often" recoverable *manually* (i.e., by a git developer-expert) even if the syncs are not switched on. (These 'unofficial guarantees were obtained from some emails listed in subsequent sections.)
+**Unofficial ALC guarantee (as told by Git developers):** Git should work correctly on any file system that orders meta-data and data writes, even without 'core.fsyncobjectfiles'. For file systems that do not maintain order, switching on the fsyncs is a good idea, even though the state is "often" recoverable *manually* (i.e., by a git developer-expert) even if the fsyncs are not switched on.
 
-Developer assumptions and opinions
-----------------------------------
+These unofficial guarantees were obtained from some emails, in which the developers express opinions about Git's ALC interaction with the file system. Such opinions, the workload used for finding bugs, correctness checks, and the consistency protocol, are described in detail towards the end of the document.
 
-* I find from my experiments that, except for issue (1) described in the subsequent paragraphs, the former assumption (ordering file system doesn't need 'core.fsyncobjectfiles') is entirely correct. The second assumption would be correct, for *common* non-reordering filesystems, if we define "recovery" to recover only to a consistent state (without considering durability) - git does not delete old old object files, so if the last commit is corrupted, manual recovery to the previous commit is possible. Jeff King (a Git developer) correctly guesses possible errors that might happen in a common re-ordering file system.
-
-  However, for non common re-ordering file systems, even manual recovery might not be possible, since Git appends to certain meta-information logs (such as './git/logs/HEAD') and overwrites some meta-information pointer files (such as '.git/refs/heads/master'); crazy file systems might even leave the entire contents of these file as garbage when they are being edited. (I assume you have a sensible notion of recovery; deleting the entire repository to get a "consistent" but empty repository, is BS.)
-
-The emails listed next (from the Git mailing list) provide information on developer assumptions and opinions about system crash recovery in Git. The description of 'core.fsyncobjectfiles' in the manpage of 'git-config' also provides information.
-
-* http://marc.info/?l=git&m=124839484917965&w=2
-* http://marc.info/?l=git&m=137489462314389&w=2
-* http://marc.info/?l=git&m=133573931013962&w=2
-
-* **Opinion on the term 'journaled file systems'**: From the manpage description of core.fsyncobjectfiles, and a 2009 email by Torvalds, the following opinion seems to be expressed: journaling maintains (system-call level) ordering.  I have encountered similar definitions of 'journaled file systems' from my interaction with the LevelDB developer community. Also, the apparent reason data ordering cannot be relied upon, in normal journaling file systems, is because they don't provide data journaling, but only metadata journaling. It will be interesting to know whether file system developers or researchers agree with this. I'm unsure whether application developers consider Btrfs as a journaling file system.
-
-* The manpage entry for 'core.fsyncobjectfiles' seems to assume that the user knows the behavior of the underlying file system (akin to knowledge necessary for SQLite config options). While core.fsyncobjectfiles is not necessary for ext3-ordered, it is needed for automatic recovery in ext4, btrfs, and probably most other modern file systems; even manual recovery of the last commit is not possible with the option switched off. Torvalds is hopefully aware of this, but there doesn't seem to be any e-mail in the mailing list that discusses the issue (in the post-2009 era), and the option is still switched off by default.
-
-Issues
-------
+Bugs/Issues
+-----------
 
 1. In the tested workload, Git first appends some data to the end of a file, and then renames another file. For correct operation, both the rename and the append has to be atomic.
 
@@ -83,7 +68,7 @@ Issues
 
    *Note:* In Git, there is a problem in separating durability and consistency. The usual definition of consistency, as in other applications, would be that previous commits are retrievable, even if the last few commits are not. However, consider the situation where the user commits to git, then rewrites actual code files; if the last commit was not durable, the repository might be left in a state where the code files are updated, but the last commit is lost silently.
 
-7. There are four files in total that Git creates using the *create(tmp); write(tmp); fsync(tmp); link(tmp->permanent);* sequence. The fsync() is left out by default, and requires the core.fsyncobjectfiles option. If the fsync() is left out, correctness is affected.
+7. There are four files in total that Git creates using the *create(tmp); write(tmp); fsync(tmp); link(tmp->permanent);* sequence. The fsync() is left out by default, and issued only with the core.fsyncobjectfiles option switched on. If the fsync() is left out, correctness is affected.
 
    *Details:* Two link()-creations correspond to each of the two renames in the workload. If the renames get to the disk before the data of the created files, various errors are produced.
 
@@ -92,3 +77,75 @@ Issues
   For the second rename, for the zero-size, the garbage-filled, and the zero-filled cases, the checkers produce non-deterministic error reports. For the first file, all checkers except the log checks produces non-deterministic errors; for the second file, all checkers produce non-deterministic output. For the second rename, I did not test the case where the size increases partially, but data is filled up till that size. (For the second rename, the file creations are done with a single write call each, while for the first rename, the file creations had multiple write calls.)
 
    *Exposed in actual file systems?* Btrfs, Ext4.
+
+#### Are the unofficial guarantees satisfied?
+
+* *File systems ordering everything don't require 'core.fsyncobjectfiles'*: True, except for issue 1 and issue 6.
+
+* *Re-ordering file systems mostly work; manual recovery might be needed:* If we define "recovery" to recover only to a consistent state (without considering durability), seemingly correct. I say "seemingly", because I am not sure how manual recovery is done. Git does not delete old old object files, so if the last commit is corrupted, manual recovery to the previous commit is probable. Jeff King (a Git developer) correctly guesses object and meta-information corruptions that might happen in a common re-ordering file system. However, Git appends to certain meta-information logs (such as './git/logs/HEAD') and overwrites some meta-information pointer files (such as '.git/refs/heads/master'); crazy file systems might even leave the entire contents of these meta-information file as garbage when they are being edited. If manual recovery requires meta-information files to be in a sensible state, recovery will not be possible under such crazy file systems.
+
+* *With 'core.fsyncobjectfiles' switched on, automatic recovery would be possible even in re-ordering file systems*: False. True with file systems that only re-order data.
+
+
+Developer assumptions and opinions
+----------------------------------
+
+The emails listed next (from the Git mailing list) provide information on developer assumptions and opinions about system crash recovery in Git. The description of 'core.fsyncobjectfiles' in the manpage of 'git-config' also provides information.
+
+* http://marc.info/?l=git&m=124839484917965&w=2
+* http://marc.info/?l=git&m=137489462314389&w=2
+* http://marc.info/?l=git&m=133573931013962&w=2
+
+1. *Opinion on the term 'journaled file systems'*: From the manpage description of core.fsyncobjectfiles, and a 2009 email by Torvalds, the following opinion seems to be expressed: journaling maintains (system-call level) ordering.  I have encountered similar definitions of 'journaled file systems' from my interaction with the LevelDB developer community. Also, the apparent reason data ordering cannot be relied upon, in normal journaling file systems, is because they don't provide 'data journaling', but only 'metadata journaling'. It will be interesting to know whether file system developers or researchers agree with this. I'm not sure whether application developers consider Btrfs as a journaling file system.
+
+2. *core.fsyncobjectfiles:* The manpage entry for 'core.fsyncobjectfiles' seems to assume that the user knows the behavior of the underlying file system (akin to knowledge necessary for SQLite config options). Torvalds assures that core.fsyncobjectfiles is not necessary for normal file systems in a 2009 e-mail (before delayed allocation and other forms of re-ordering became common). There doesn't seem to be much post-2009 discussion.
+
+Workload, checkers
+------------------
+
+The initial state of the directory is an initialized git repository containing two files. The workload consists of adding two additional files to the repository using 'git add .', and then commiting the result using 'git commit'. Each of the files is about 20KB in size.
+
+#### Correctness checks
+The following git commands are the first part of correctness checks:
+
+* git show-ref
+* git show-ref -h HEAD
+* git reflog
+* git log
+* git status
+* git fsck
+
+For each of these commands, for the most part, the textual output of the command is compared with the outputs that might occur if the workload is interrupted (i.e., crashed) at various points without any re-ordering. However, miscellaneous complexities occuring in the text output are also taken care of. For example, if a command detects the existence of a lock file and warns the user, the lock file is detected, and the command is re-executed. For the 'fsck' command, if any dangling objects are reported (as they often are), those reports are ignored; the repository is still considered consistent.
+
+For the second part of the correctness checks, a few files are removed from the repository using 'git rm', a file is added using 'git add', and the new state of the repository is committed. Then, checkouts are done for the various commits contained in the repository, and the contents of data files after the checkout are verified. Text output is also checked for the add, remove, and checkout commands.
+
+Protocol
+--------
+
+#### git add
+
+1. creat(index.lock)
+2. Create an 'object file' corresponding to the first added file
+   1. mkdir('objects/XX')
+   2. creat(temporary file within 'objects/XX')
+   3. write to temporary file
+   4. fsync(temporary file)
+   5. link(temporary file -> permanent file, within 'objects/XX')
+   6. unlink(temporary file)
+3. Create an object file corresponding to second added file
+  * Similar to step 2, but uses a different directory instead of 'XX'
+4. Write to index.lock
+5. rename(index.lock -> index)
+
+#### git commit
+1. creat(index.lock), and then unlink(index.lock)
+   * This is probably a check for whether some other process is holding the lock
+2. Create an object file
+   * Similar to step 2/3 of git-add, but the file created is very small.
+   * This object file *does not* correspond to an added file, unlike steps 2 and 3 of git-add
+3. Create an object file
+   * Similar to step 2
+4. creat(master.lock)
+5. Write various meta-information files
+   * The files '.git/logs/refs/heads/master', '.git/logs/HEAD', and 'master.lock' are written.
+6. rename(master.lock -> master)
