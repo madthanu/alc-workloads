@@ -15,21 +15,33 @@ if False:
 	dops_replay()
 
 if True:
-	all_combos = []
+	#all_combos = []
+	combos_count = 0
 	load(0)
 	for i in range(0, dops_len()):
-		till = dops_single(dops_independent_till(dops_double(i)))
-		for j in range(i + 1, till):
-			all_combos.append((i, j))
+		drop_set = [dops_double(i)]
+		for j in range(i + 1, dops_len()):
+			drop_set.append(dops_double(j))
+			till = dops_independent_till(drop_set)
+			print(str((dops_double(i), dops_double(j))) + ' ' + str(combos_count) + ' ' + str(till))
+			till = dops_single(till)
+			if till < j:
+				break
+			else:
+				combos_count += (till - j)
+			#for k in range(j + 1, till + 1):
+			#	all_combos.append((i, j, k))
 
-	print 'Done getting all_combos'
-	all_combos.reverse()
+	print 'Done getting all_combos.'
+	print combos_count
+	#all_combos.reverse()
 
+if False:
 	last = 0
 	for i in range(0, dops_len()):
 		load(0)
 		till = dops_single(dops_independent_till(dops_double(i)))
-		for j in range(i + 1, till):
+		for j in range(i + 1, till + 1):
 			load(0)
 			assert (i, j) == all_combos.pop()
 			R = str(i) + str(dops_double(i))
@@ -44,7 +56,8 @@ if True:
 	print last
 	print (dops_len() - 2, dops_len() - 1)
 	assert last == (dops_len() - 2, dops_len() - 1)
-		
+
+print 'Done crash specification.'
 #_dops_verify_replayer()
 #auto_test(limit = 10)
 #for i in range(0, 11):
