@@ -1,20 +1,15 @@
 import datetime
-
-if False:
-	load(0)
-	R = dops_double(128)
-	E = dops_double(132)
-	end_at(E)
-	dops_remove(R)
-	dops_replay()
-	load(0)
-	R = dops_double(128)
-	E = dops_double(133)
-	end_at(E)
-	dops_remove(R)
-	dops_replay()
+load(0)
 
 if True:
+	load(0)
+	R = dops_double(128)
+	E = (37,5)
+	dops_end_at(E)
+	dops_omit(R)
+	dops_replay()
+
+if False:
 	all_combos = []
 	combos_count = 0
 	load(0)
@@ -56,7 +51,7 @@ if False:
 	print (dops_len() - 2, dops_len() - 1)
 	assert last == (dops_len() - 2, dops_len() - 1)
 
-if True:
+if False:
 	load(0)
 	for i in range(0, dops_len()):
 		drop_set = [dops_double(i)]
@@ -66,11 +61,11 @@ if True:
 			if till < j:
 				break
 			for k in range(j + 1, till + 1):
-				assert (i, j, k) == all_combos.pop()
+				#assert (i, j, k) == all_combos.pop()
 				R = str(i) + str(dops_double(i)) + '...' + str(j) + str(dops_double(j))
 				E = str(k) + str(dops_double(k))
-				end_at(dops_double(k))
-				for drop_op in reversed(drop_set): dops_remove(drop_op)
+				dops_end_at(dops_double(k))
+				for drop_op in reversed(drop_set): dops_omit(drop_op)
 				dops_replay(str(datetime.datetime.now()) +
 							' R' + R +
 							' E' + E)

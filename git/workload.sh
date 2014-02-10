@@ -13,6 +13,8 @@ function initialize_workload {
 	cd /mnt/mydisk
 	git init .
 	git config core.fsyncobjectfiles true
+	git config user.name john
+	git config user.email smith
 	dd if=/dev/urandom of=file1 count=5 bs=4192
 	dd if=/dev/urandom of=file2 count=5 bs=4192
 	git add .

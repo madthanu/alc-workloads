@@ -21,7 +21,7 @@ second_commit_long=$(head -1 tmp/checker_params)
 first_commit_long=$(tail -1 tmp/checker_params)
 second_commit_short=$(head -1 tmp/checker_params | awk '{print substr($1, 0, 7)'})
 first_commit_short=$(tail -1 tmp/checker_params | awk '{print substr($1, 0, 7)'})
-git_author=$(echo $(whoami)'<'$(whoami)@$(uname -n)'>')
+git_author='john <smith>'
 
 if [ $first_commit_long == '' ] || [ $second_commit_long == '' ]
 then
@@ -104,6 +104,8 @@ function refs_log_check {
 	fi
 	if [ $(matches "$o4" "$o4_c1") -eq 0 ] && [ $(matches "$o4" "$o4_c2") -eq 0 ]
 	then
+		echo "$o4"
+		echo "$o4_c1"
 		echo "insane o4"
 		return
 	fi
@@ -249,15 +251,7 @@ function rm_add_commit_check {
 		rm -f /mnt/mydisk/.git/refs/heads/master.lock
 		o_commit=$(git commit -m "test3" 2>&1) || true
 	fi
-	o_correct_part="Committer: $git_author
-			Your name and email address were configured automatically based
-			on your username and hostname. Please check that they are accurate.
-			You can suppress this message by setting them explicitly:
-			git config --global user.name \"Your Name\"
-			git config --global user.email you@example.com
-			After doing this, you may fix the identity used for this commit with:
-			git commit --amend --reset-author
-			delete mode 100644 file1
+	o_correct_part="delete mode 100644 file1
 			delete mode 100644 file2
 			create mode 100644 file5"
 	o_correct_tmp=$(echo "$o_commit" | grep -v '^\[master' | grep -v 'create mode 100644 file[34]' | grep -v '[35] files changed, 1 insertion' | sed 's/[ \t]//g' | grep -v '^$')
