@@ -1,5 +1,5 @@
-refs_log_check: consistent, f98fdc3
-status_check: consistent, both tracked
+refs_log_check: consistent, 97dc449
+status_check: consistent
 fsck_check: consistent
 rm_add_commit_check: consistent
 post_checks: consistent directory

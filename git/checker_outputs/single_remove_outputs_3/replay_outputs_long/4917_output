@@ -1,4 +1,4 @@
-refs_log_check: consistent, f98fdc3
+refs_log_check: insane o3
 status_check: inconsistent
 fsck_check: error: bad index file sha1 signature
 fatal: index file corrupt

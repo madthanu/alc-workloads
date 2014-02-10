@@ -1,4 +1,4 @@
-refs_log_check: insane o3
+refs_log_check: consistent, f98fdc3
 status_check: consistent, both tracked
 fsck_check: consistent
 rm_add_commit_check: consistent

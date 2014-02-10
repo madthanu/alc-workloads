@@ -1,6 +1,6 @@
-refs_log_check: consistent, f98fdc3
+refs_log_check: insane o3
 status_check: inconsistent
-fsck_check: error: bad index file sha1 signature
+fsck_check: error: bad signature
 fatal: index file corrupt
 rm_add_commit_check: inconsistent, git-rm
 post_checks: inconsistent directory after all commit operations

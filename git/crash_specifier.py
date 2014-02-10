@@ -14,7 +14,7 @@ if False:
 	dops_remove(R)
 	dops_replay()
 
-if True:
+if False:
 	#all_combos = []
 	combos_count = 0
 	load(0)
@@ -36,14 +36,14 @@ if True:
 	print combos_count
 	#all_combos.reverse()
 
-if False:
+if True:
 	last = 0
 	for i in range(0, dops_len()):
 		load(0)
 		till = dops_single(dops_independent_till(dops_double(i)))
 		for j in range(i + 1, till + 1):
 			load(0)
-			assert (i, j) == all_combos.pop()
+			#assert (i, j) == all_combos.pop()
 			R = str(i) + str(dops_double(i))
 			E = str(j) + str(dops_double(j))
 			end_at(dops_double(j))

@@ -3,5 +3,5 @@ status_check: consistent, both tracked
 fsck_check: dangling commit 97dc44907a8ae6bdadbfc4ff5010f2884fca5d9e
 rm_add_commit_check: consistent
 post_checks: consistent directory
-lock_found: 0
+lock_found: 1
 timed_out: 0

@@ -1,4 +1,4 @@
-refs_log_check: insane o3
+refs_log_check: consistent, f98fdc3
 status_check: consistent, both tracked
 fsck_check: missing blob adc90afb6c2d7463915c5065c81aa5797b9f5f03
 rm_add_commit_check: consistent

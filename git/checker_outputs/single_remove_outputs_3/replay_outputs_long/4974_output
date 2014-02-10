@@ -1,7 +1,7 @@
 refs_log_check: consistent, f98fdc3
-status_check: inconsistent
-fsck_check: fatal: index file smaller than expected
-rm_add_commit_check: inconsistent, git-rm
-post_checks: inconsistent directory after all commit operations
-lock_found: 0
+status_check: consistent, both tracked
+fsck_check: dangling commit 97dc44907a8ae6bdadbfc4ff5010f2884fca5d9e
+rm_add_commit_check: consistent
+post_checks: consistent directory
+lock_found: 1
 timed_out: 0

@@ -1,8 +1,8 @@
-refs_log_check: insane o1
-status_check: inconsistent
-fsck_check: notice: HEAD points to an unborn branch (master)
-notice: No default references
-rm_add_commit_check: inconsistent, git-rm
-post_checks: inconsistent directory after all commit operations
-lock_found: 0
+refs_log_check: consistent, f98fdc3
+status_check: consistent, both tracked
+fsck_check: missing blob d0e3fa9eaf34de6ece498ea4674a0bc2626fd354
+dangling commit 97dc44907a8ae6bdadbfc4ff5010f2884fca5d9e
+rm_add_commit_check: consistent
+post_checks: consistent directory
+lock_found: 1
 timed_out: 0

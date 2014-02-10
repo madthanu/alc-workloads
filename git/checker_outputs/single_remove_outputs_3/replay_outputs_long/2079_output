@@ -1,7 +1,7 @@
 refs_log_check: consistent, f98fdc3
-status_check: inconsistent
-fsck_check: dangling blob d0e3fa9eaf34de6ece498ea4674a0bc2626fd354
-rm_add_commit_check: inconsistent, git-rm
-post_checks: inconsistent directory after all commit operations
+status_check: consistent, both untracked
+fsck_check: consistent
+rm_add_commit_check: consistent
+post_checks: consistent directory
 lock_found: 1
 timed_out: 0

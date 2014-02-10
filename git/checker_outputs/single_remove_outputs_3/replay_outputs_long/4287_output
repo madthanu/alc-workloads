@@ -1,7 +1,7 @@
-refs_log_check: consistent, f98fdc3
+refs_log_check: insane o3
 status_check: consistent, both tracked
 fsck_check: consistent
 rm_add_commit_check: consistent
 post_checks: consistent directory
-lock_found: 0
+lock_found: 1
 timed_out: 0

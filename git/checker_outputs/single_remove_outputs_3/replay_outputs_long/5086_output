@@ -1,7 +1,8 @@
 refs_log_check: consistent, f98fdc3
-status_check: consistent, both tracked
-fsck_check: dangling tree 8eaf34b0023a3b4f8aadf55f4f7ea911006b529d
-rm_add_commit_check: consistent
-post_checks: consistent directory
+status_check: inconsistent
+fsck_check: error: bad index file sha1 signature
+fatal: index file corrupt
+rm_add_commit_check: inconsistent, git-rm
+post_checks: inconsistent directory after all commit operations
 lock_found: 0
 timed_out: 0
