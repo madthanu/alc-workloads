@@ -14,8 +14,8 @@ if False:
 	dops_remove(R)
 	dops_replay()
 
-if False:
-	#all_combos = []
+if True:
+	all_combos = []
 	combos_count = 0
 	load(0)
 	for i in range(0, dops_len()):
@@ -23,20 +23,19 @@ if False:
 		for j in range(i + 1, dops_len()):
 			drop_set.append(dops_double(j))
 			till = dops_independent_till(drop_set)
-			print(str((dops_double(i), dops_double(j))) + ' ' + str(combos_count) + ' ' + str(till))
+			print('Combos count: ' + str((dops_double(i), dops_double(j))) + ' ' + str(combos_count) + ' ' + str(till))
 			till = dops_single(till)
 			if till < j:
 				break
-			else:
-				combos_count += (till - j)
-			#for k in range(j + 1, till + 1):
-			#	all_combos.append((i, j, k))
+			combos_count += (till - j)
+			for k in range(j + 1, till + 1):
+				all_combos.append((i, j, k))
 
 	print 'Done getting all_combos.'
 	print combos_count
-	#all_combos.reverse()
+	all_combos.reverse()
 
-if True:
+if False:
 	last = 0
 	for i in range(0, dops_len()):
 		load(0)
@@ -56,6 +55,26 @@ if True:
 	print last
 	print (dops_len() - 2, dops_len() - 1)
 	assert last == (dops_len() - 2, dops_len() - 1)
+
+if True:
+	load(0)
+	for i in range(0, dops_len()):
+		drop_set = [dops_double(i)]
+		for j in range(i + 1, dops_len()):
+			drop_set.append(dops_double(j))
+			till = dops_single(dops_independent_till(drop_set))
+			if till < j:
+				break
+			for k in range(j + 1, till + 1):
+				assert (i, j, k) == all_combos.pop()
+				R = str(i) + str(dops_double(i)) + '...' + str(j) + str(dops_double(j))
+				E = str(k) + str(dops_double(k))
+				end_at(dops_double(k))
+				for drop_op in reversed(drop_set): dops_remove(drop_op)
+				dops_replay(str(datetime.datetime.now()) +
+							' R' + R +
+							' E' + E)
+				load(0)
 
 print 'Done crash specification.'
 #_dops_verify_replayer()
