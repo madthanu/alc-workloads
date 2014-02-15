@@ -15,6 +15,7 @@ else
 	replayed_snapshot="$(pwd)/$1"
 fi
 
+echo TERMINATED > /tmp/short_output
 
 ### Initialize workload parameters
 second_commit_long=$(head -1 tmp/checker_params)
