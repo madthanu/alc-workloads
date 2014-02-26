@@ -15,7 +15,8 @@ else
 	replayed_snapshot="$(pwd)/$1"
 fi
 
-echo TERMINATED > /tmp/short_output
+mkdir -p /tmp/checker_$$
+echo TERMINATED > /tmp/checker_$$/short_output
 
 ### Initialize workload parameters
 second_commit_long=$(head -1 tmp/checker_params)
@@ -27,28 +28,26 @@ git_author='john <smith>'
 if [ $first_commit_long == '' ] || [ $second_commit_long == '' ]
 then
 	echo "ERROR: Checker parameters not initialized by workload script."
-	echo "ERROR: Checker parameters not initialized by workload script." > /tmp/short_output
+	echo "ERROR: Checker parameters not initialized by workload script." > /tmp/checker_$$/short_output
 	exit 1
 fi
 
 ### Initializing directories
-rm -rf /mnt/mydisk
-cp -R "$replayed_snapshot" /mnt/mydisk
-rm -rf /tmp/scratchpad
-cp -R "$replayed_snapshot" /tmp/scratchpad
-echo "not done" > /tmp/short_output
-cd /mnt/mydisk
+rm -rf /tmp/checker_$$/scratchpad
+cp -R "$replayed_snapshot" /tmp/checker_$$/scratchpad
+echo "not done" > /tmp/checker_$$/short_output
+cd $replayed_snapshot
 
 ### Variable to track whether a lock existed in this crash scenario
-echo 0 > /tmp/lock_found
-echo 0 > /tmp/timed_out
+echo 0 > /tmp/checker_$$/lock_found
+echo 0 > /tmp/checker_$$/timed_out
 
 function git {
 	timeout -k 1 2 git "$@"
 	if [ $? -eq 124 ]
 	then
 		echo "timeout"
-		echo 1 > /tmp/timed_out
+		echo 1 > /tmp/checker_$$/timed_out
 	fi
 }
 
@@ -197,20 +196,20 @@ function fsck_check {
 function rm_add_commit_check {
 	current_commit="$1"
 	o_rm=$(git rm file1 file2 2>&1) || true
-	lock_exists_output='''fatal: Unable to create '"'"'/mnt/mydisk/.git/index.lock'"'"': File exists.
+	lock_exists_output='''fatal: Unable to create '"'$replayed_snapshot"'/.git/index.lock'"'"': File exists.
 				If no other git process is currently running, this probably means a
 				git process crashed in this repository earlier. Make sure no other git
 				process is running and remove the file manually to continue.'''
 	o_lock_exists=$(diff <(echo "$o_rm" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$lock_exists_output" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
-	if [ -f /mnt/mydisk/.git/index.lock ]
+	if [ -f $replayed_snapshot/.git/index.lock ]
 	then
 		if [ $o_lock_exists -ne 0 ]
 		then
 			echo "inconsistent, no-lock-warning git-rm"
 			return
 		else
-			echo 1 > /tmp/lock_found
-			rm -f /mnt/mydisk/.git/index.lock
+			echo 1 > /tmp/checker_$$/lock_found
+			rm -f $replayed_snapshot/.git/index.lock
 			o_rm=$(git rm file1 file2 2>&1) || true
 		fi
 	fi
@@ -232,12 +231,12 @@ function rm_add_commit_check {
 	fi
 
 	o_commit=$(git commit -m "test3" 2>&1) || true
-	lock_exists_output='''fatal: Unable to create '"'"'/mnt/mydisk/.git/refs/heads/master.lock'"'"': File exists.
+	lock_exists_output='''fatal: Unable to create '"'$replayed_snapshot"'/.git/refs/heads/master.lock'"'"': File exists.
 				If no other git process is currently running, this probably means a
 				git process crashed in this repository earlier. Make sure no other git
 				process is running and remove the file manually to continue.'''
 	o_lock_exists=$(diff <(echo "$o_commit" | sed 's/[ \t]//g' | grep -v '^$') <(echo "$lock_exists_output" | sed 's/[ \t]//g' | grep -v '^$') | wc -l)
-	if [ -f /mnt/mydisk/.git/refs/heads/master.lock ]
+	if [ -f $replayed_snapshot/.git/refs/heads/master.lock ]
 	then
 		if [ $o_lock_exists -ne 0 ]
 		then
@@ -248,8 +247,8 @@ function rm_add_commit_check {
 	if [ $o_lock_exists -eq 0 ]
 	then
 		# lock actually does exist
-		echo 1 > /tmp/lock_found
-		rm -f /mnt/mydisk/.git/refs/heads/master.lock
+		echo 1 > /tmp/checker_$$/lock_found
+		rm -f $replayed_snapshot/.git/refs/heads/master.lock
 		o_commit=$(git commit -m "test3" 2>&1) || true
 	fi
 	o_correct_part="delete mode 100644 file1
@@ -269,7 +268,7 @@ function post_checks {
 	function check_data {
 		file="$1"
 		msg="$2"
-		o_correct=$(diff /mnt/mydisk/$file /tmp/scratchpad/$file | wc -l)
+		o_correct=$(diff $replayed_snapshot/$file /tmp/checker_$$/scratchpad/$file | wc -l)
 		if [ $o_correct -ne 0 ]
 		then
 			echo "inconsistent data, $file, $msg"
@@ -371,44 +370,48 @@ function post_checks {
 
 git config core.fsyncobjectfiles false
 
-refs_log_check_output=$(refs_log_check)
-echo "refs_log_check: $refs_log_check_output"
-short_summary=$(echo $refs_log_check_output | awk -F ',' '{print $1}')
+function do_it {
+	refs_log_check_output=$(refs_log_check)
+	echo "refs_log_check: $refs_log_check_output"
+	short_summary=$(echo $refs_log_check_output | awk -F ',' '{print $1}')
 
-last_commit=$(echo $refs_log_check_output | awk '{print $2}')
+	last_commit=$(echo $refs_log_check_output | awk '{print $2}')
 
-status_check_output=$(status_check $last_commit)
-echo "status_check: $status_check_output"
-short_summary="$short_summary; $status_check_output"
+	status_check_output=$(status_check $last_commit)
+	echo "status_check: $status_check_output"
+	short_summary="$short_summary; $status_check_output"
 
-fsck_check_output=$(fsck_check)
-echo "fsck_check: $fsck_check_output"
-fsck_dangling_ignored=$(echo "$fsck_check_output" | sed 's/dangling.*$/D/g' | tr -d '\n' | sed 's/^D\+$/consistentD/g')
-if [ "$fsck_dangling_ignored" != "consistent" ] && [ "$fsck_dangling_ignored" != "consistentD" ]
-then
-	fsck_dangling_ignored="error"
-fi
-short_summary="$short_summary; $fsck_dangling_ignored"
+	fsck_check_output=$(fsck_check)
+	echo "fsck_check: $fsck_check_output"
+	fsck_dangling_ignored=$(echo "$fsck_check_output" | sed 's/dangling.*$/D/g' | tr -d '\n' | sed 's/^D\+$/consistentD/g')
+	if [ "$fsck_dangling_ignored" != "consistent" ] && [ "$fsck_dangling_ignored" != "consistentD" ]
+	then
+		fsck_dangling_ignored="error"
+	fi
+	short_summary="$short_summary; $fsck_dangling_ignored"
 
-rm_add_commit_check_output=$(rm_add_commit_check $last_commit)
-echo "rm_add_commit_check: $rm_add_commit_check_output"
-short_summary="$short_summary; $rm_add_commit_check_output"
+	rm_add_commit_check_output=$(rm_add_commit_check $last_commit)
+	echo "rm_add_commit_check: $rm_add_commit_check_output"
+	short_summary="$short_summary; $rm_add_commit_check_output"
 
-post_checks_output=$(post_checks $last_commit)
-echo "post_checks: $post_checks_output"
-short_summary="$short_summary; $post_checks_output"
+	post_checks_output=$(post_checks $last_commit)
+	echo "post_checks: $post_checks_output"
+	short_summary="$short_summary; $post_checks_output"
 
-echo "lock_found: $(cat /tmp/lock_found)"
-if [ $(cat /tmp/lock_found) -eq 1 ]
-then
-	short_summary="$short_summary; L"
-fi
+	echo "lock_found: $(cat /tmp/checker_$$/lock_found)"
+	if [ $(cat /tmp/checker_$$/lock_found) -eq 1 ]
+	then
+		short_summary="$short_summary; L"
+	fi
 
-echo "timed_out: $(cat /tmp/timed_out)"
-if [ $(cat /tmp/timed_out) -eq 1 ]
-then
-	short_summary="$short_summary; T"
-fi
+	echo "timed_out: $(cat /tmp/checker_$$/timed_out)"
+	if [ $(cat /tmp/checker_$$/timed_out) -eq 1 ]
+	then
+		short_summary="$short_summary; T"
+	fi
 
-echo "$short_summary" | sed 's/consistent/C/g' | sed 's/dangling/D/g' | sed 's/directory/dir/g' | sed 's/both tracked/T/g' | sed 's/both untracked/U/g' > /tmp/short_output
+	echo "$short_summary" | sed 's/consistent/C/g' | sed 's/dangling/D/g' | sed 's/directory/dir/g' | sed 's/both tracked/T/g' | sed 's/both untracked/U/g' > /tmp/checker_$$/short_output
+}
 
+do_it > /dev/null
+cat /tmp/checker_$$/short_output
