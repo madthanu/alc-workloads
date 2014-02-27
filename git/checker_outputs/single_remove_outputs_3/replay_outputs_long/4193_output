@@ -1,7 +1,0 @@
-refs_log_check: insane o3
-status_check: consistent, both tracked
-fsck_check: missing blob d0e3fa9eaf34de6ece498ea4674a0bc2626fd354
-rm_add_commit_check: inconsistent, no-lock-warning
-post_checks: inconsistent checkout, first commit
-lock_found: 0
-timed_out: 0

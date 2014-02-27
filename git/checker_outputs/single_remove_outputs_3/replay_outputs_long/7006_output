@@ -1,7 +1,0 @@
-refs_log_check: consistent, f98fdc3
-status_check: consistent, both tracked
-fsck_check: dangling tree 8eaf34b0023a3b4f8aadf55f4f7ea911006b529d
-rm_add_commit_check: consistent
-post_checks: consistent directory
-lock_found: 1
-timed_out: 0

@@ -1,8 +1,0 @@
-refs_log_check: consistent, 97dc449
-status_check: inconsistent
-fsck_check: error: bad signature
-fatal: index file corrupt
-rm_add_commit_check: inconsistent, git-rm
-post_checks: inconsistent directory after all commit operations
-lock_found: 0
-timed_out: 0

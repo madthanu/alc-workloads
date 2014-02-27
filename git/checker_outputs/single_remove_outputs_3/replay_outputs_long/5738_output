@@ -1,7 +1,0 @@
-refs_log_check: consistent, 97dc449
-status_check: consistent
-fsck_check: consistent
-rm_add_commit_check: consistent
-post_checks: consistent directory
-lock_found: 1
-timed_out: 0
