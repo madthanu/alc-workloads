@@ -41,7 +41,8 @@ incorrect_states = ['\tC; C, T; C; inC, git-add; inC checkout, first commit; T',
      '\tinsane o3; C, T; error; inC, no-lock-warning; inC checkout, first commit',
      '\tinsane o3; inC; C; C; C dir',
      '\tinsane o3; inC; C; inC, git-rm; inC dir after all commit operations',
-     '\tinsane o3; inC; error; inC, git-rm; inC dir after all commit operations']
+     '\tinsane o3; inC; error; inC, git-rm; inC dir after all commit operations',
+     '\tC; C; error; inC, git-commit; inC checkout, first commit']
 
 colormap = OrderedDict()
 # YELLOW - error fsck; no other problem. Shades represent progress.
@@ -52,6 +53,7 @@ colormap['\tC; C; error; C; C dir'] = '#FFFF00'
 # BLUE - error fsck; other problems (except insane o3)
 colormap['\tC; C, T; error; inC, git-commit; inC checkout, first commit'] = '#0000FF'
 colormap['\tC; C, T; error; inC, no-lock-warning; inC checkout, first commit'] = '#0000FF'
+colormap['\tC; C; error; inC, git-commit; inC checkout, first commit'] = '#0000FF'
 colormap['\tC; inC; error; inC, git-rm; inC dir after all commit operations'] = '#0000AA'
 colormap['\tC; inC; error; inC, git-rm; inC dir after all commit operations; L'] = '#0000AA'
 colormap['\tinsane o1; inC; error; inC, git-rm; inC dir after all commit operations']= '#000088'
@@ -110,11 +112,13 @@ def converter(msg):
 				"<div style='color:#ffffff; font-weight:bold; visibility:%s'>LL</div>" \
 				"</td>" % (color, first_visibility, second_visibility)
 		return html_output
-	else:
-		assert msg in incorrect_states
+	elif msg in incorrect_states:
 		if not detailed:
 			return visualize.color_cell('Red')
 		return "<td bgcolor='%s'></td>" % colormap[msg]
+	else:
+		print 'Unhandled: ' + msg
+		assert False
 
 def get_legend():
 	toret = OrderedDict()
