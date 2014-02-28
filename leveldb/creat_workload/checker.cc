@@ -20,6 +20,8 @@ string key, value;
 
 void read_and_verify(DB *db) {
 	int number_of_entries = 0;
+	ReadOptions read_options;
+	read_options.
 	Iterator* it = db->NewIterator(ReadOptions());
 	status_assert(it->status());
 	for (it->SeekToFirst(); it->Valid(); it->Next()) {
@@ -40,6 +42,7 @@ int main(int argc, char *argv[]) {
 	WriteOptions write_options;
 
 	options.create_if_missing = true;
+	options.paranoid_checks = true;
 
 	key = string(gen_string('a', 5000, 0));
 	value = string(gen_string('A', 5000, 1));
