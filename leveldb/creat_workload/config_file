@@ -1,0 +1,9 @@
+prefix = "tmp/strace.out"
+initial_snapshot = "tmp/snapshot"
+replayed_snapshot = "/tmp/replayed_snapshot"
+base_path = "/mnt/mydisk/"
+orderings_script = "crash_specifier.py"
+checker_tool = "./checker.sh"
+starting_cwd = "."
+hide_diskops = True
+replayer_threads = 4
