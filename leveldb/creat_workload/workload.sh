@@ -3,15 +3,16 @@ trap 'echo Bash error:$0 $1:${LINENO}' ERR
 set -e
 
 function initialize_workload {
+	export workload_dir=$(pwd)/workload_dir
 	make -s workload
 	mkdir -p ./tmp
 	rm -rf ./tmp/*
-	rm -rf /mnt/mydisk/*
-	export workload_dir=/mnt/mydisk
+	mkdir -p $workload_dir
+	rm -rf $workload_dir/*
 }
 
 function do_workload {
-	cp -R /mnt/mydisk ./tmp/snapshot
+	cp -R $workload_dir ./tmp/snapshot
 	mtrace -o ./tmp/strace.out -- ./workload
 }
 

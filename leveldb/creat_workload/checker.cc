@@ -21,8 +21,8 @@ string key, value;
 void read_and_verify(DB *db) {
 	int number_of_entries = 0;
 	ReadOptions read_options;
-	read_options.
-	Iterator* it = db->NewIterator(ReadOptions());
+	read_options.verify_checksums = true;
+	Iterator* it = db->NewIterator(read_options);
 	status_assert(it->status());
 	for (it->SeekToFirst(); it->Valid(); it->Next()) {
 		status_assert(it->status());
