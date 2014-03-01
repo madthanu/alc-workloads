@@ -2,6 +2,12 @@
 #include <unistd.h>
 #include <cassert>
 
+#define status_assert(status) 	if(!status.ok()) { \
+					cout << status.ToString() << ". "; \
+					cout.flush(); \
+				} \
+				assert(status.ok());
+
 static const char *gen_string(char c, int size, int randomize) {
 	#define MAX_SIZE 100000
 	#define REENTRY_MAX 5
