@@ -1,0 +1,12 @@
+import os
+prefix = "tmp/strace.out"
+initial_snapshot = "tmp/snapshot"
+replayed_snapshot = "/tmp/replayed_snapshot"
+base_path = os.getcwd() + "/workload_dir/"
+orderings_script = "crash_specifier.py"
+checker_tool = "./checker.sh"
+starting_cwd = "."
+#hide_diskops = True
+filter_cache_file = "tmp/filter_cache"
+micro_cache_file = "tmp/micro_cache"
+replayer_threads = 16
