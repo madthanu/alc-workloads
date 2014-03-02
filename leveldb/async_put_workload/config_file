@@ -9,4 +9,4 @@ starting_cwd = "."
 #hide_diskops = True
 filter_cache_file = "tmp/filter_cache"
 micro_cache_file = "tmp/micro_cache"
-replayer_threads = 16
+replayer_threads = 8
