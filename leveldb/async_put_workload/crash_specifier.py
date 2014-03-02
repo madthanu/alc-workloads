@@ -13,12 +13,11 @@ def prefix_run():
 	keep_list = []
 	for i in range(0, dops_len()):
 		keep_list.append(i)
-		checker_params = dops_implied_stdout(keep_list)
 
 		E = str(i) + str(dops_double(i))
 		dops_end_at(dops_double(i))
 		dops_replay(str(datetime.datetime.now()) +
-				' E' + E, checker_params = checker_params)
+				' E' + E)
 
 def omit_one_heuristic():
 	load(0)
@@ -105,4 +104,3 @@ def example_calls():
 	dops_replay()
 
 prefix_run()
-#dops_replay(checker_params=(3, 'beforeafter', 'beforeafter'))

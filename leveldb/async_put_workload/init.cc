@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
 
 	ret = DB::Open(options, db_path(), &db);
 	status_assert(ret);
-	write_options.sync = true;
 
 	key = string(gen_string('a', 5000, 0));
 	value = string(gen_string('A', 5000, 1));

@@ -55,7 +55,6 @@ int main(int argc, char *argv[]) {
 	Status ret;
 	WriteOptions write_options;
 	string key, value;
-	char *replayed_stdout = argv[3];
 
 	options.create_if_missing = true;
 
@@ -73,17 +72,8 @@ int main(int argc, char *argv[]) {
 	ret = DB::Open(options, db_path(), &db);
 	status_assert(ret);
 	int replayed_entries = read_and_verify(db);
-	if(strstr(replayed_stdout, "after") != NULL) {
-		// printf("Checking after after. ");
-		assert(replayed_entries == 3);
-	} else if (strstr(replayed_stdout, "before") == NULL) {
-		// printf("Checking before before. ");
-		assert(replayed_entries == 2);
-	} else {
-		// printf("Checking between before and after. ");
-		assert(replayed_entries == 2 || replayed_entries == 3);
-	}
-	write_options.sync = true;
+	assert(replayed_entries >= 2);
+
 	key = string(gen_string('a' + replayed_entries, 5000, 0));
 	value = string(gen_string('A' + replayed_entries, 5000, 1));
 	ret = db->Put(write_options, key, value);

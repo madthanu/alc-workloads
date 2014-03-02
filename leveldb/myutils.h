@@ -51,3 +51,12 @@ static const char *db_path() {
 	return db;
 }
 
+static bool env_bool_decode(const char *s, bool optional) {
+	char *trace_only = getenv(s);
+	if(!optional) {
+		assert(trace_only != NULL);
+	}
+	if(trace_only == NULL || strcmp(trace_only, "") == 0 || trace_only[0] == 'n' || trace_only[0] == 'N' || trace_only[0] == '0' || trace_only[0] == 'f' || trace_only[0] == 'F')
+		return false;
+	return true;
+}
