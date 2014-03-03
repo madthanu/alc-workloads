@@ -10,7 +10,6 @@
 using namespace std;
 using namespace leveldb;
 
-string key, value;
 
 int main(int argc, char *argv[]) {
 	DB* db;
@@ -18,7 +17,6 @@ int main(int argc, char *argv[]) {
 	Status ret;
 	WriteOptions write_options;
 	string key, value;
-	char *replayed_stdout = argv[3];
 
 	options.create_if_missing = true;
 

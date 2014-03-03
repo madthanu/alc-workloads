@@ -10,19 +10,12 @@
 using namespace std;
 using namespace leveldb;
 
-string key, value;
-
-#define status_assert(status) 	if(!status.ok()) { \
-					cout << status.ToString() << endl; \
-				} \
-				assert(status.ok());
-
-
 int main(int argc, char *argv[]) {
 	DB* db;
 	Options options;
 	Status ret;
 	WriteOptions write_options;
+	string key, value;
 
 	options.create_if_missing = true;
 	options.paranoid_checks = true;
