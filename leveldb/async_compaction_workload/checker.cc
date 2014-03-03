@@ -30,10 +30,14 @@ int read_and_verify(DB *db) {
 	read_options.verify_checksums = true;
 	Iterator* it = db->NewIterator(read_options);
 	status_assert(it->status());
+	int character_present[256];
+	memset(character_present, 0, 256 * sizeof(int));
 	for (it->SeekToFirst(); it->Valid(); it->Next()) {
 		status_assert(it->status());
-		key = string(gen_string(number_of_entries % 26 + 'a', 5000, 0));
-		value = string(gen_string(number_of_entries % 26 + 'A', 5000, 1));
+		assert(it->key().ToString().length() != 0);
+		unsigned char row_character = it->key().ToString().c_str()[0];
+		key = string(gen_string(row_character, 5000, 0));
+		value = string(gen_string(row_character - 'a' + 'A', 40000, 1));
 		if(key != it->key().ToString()) {
 			printf("key and it->key() mismatch. Expected: %c, Got: %s\n", number_of_entries % 26 + 'a', small_description(it->key().ToString()));
 			assert(false);
@@ -43,9 +47,14 @@ int read_and_verify(DB *db) {
 			assert(false);
 		}
 		status_assert(it->status());
+		character_present[(unsigned int) row_character] = 1;
 		number_of_entries++;
 	}
 	delete it;
+	unsigned int i;
+	for(i = 0; i < number_of_entries; i++) {
+		assert(character_present[i + 'a'] == 1);
+	}
 	return number_of_entries;
 }
 
@@ -73,19 +82,10 @@ int main(int argc, char *argv[]) {
 	ret = DB::Open(options, db_path(), &db);
 	status_assert(ret);
 	int replayed_entries = read_and_verify(db);
-	if(strstr(replayed_stdout, "after") != NULL) {
-		// printf("Checking after after. ");
-		assert(replayed_entries == 3);
-	} else if (strstr(replayed_stdout, "before") == NULL) {
-		// printf("Checking before before. ");
-		assert(replayed_entries == 2);
-	} else {
-		// printf("Checking between before and after. ");
-		assert(replayed_entries == 2 || replayed_entries == 3);
-	}
+
 	write_options.sync = true;
 	key = string(gen_string('a' + replayed_entries, 5000, 0));
-	value = string(gen_string('A' + replayed_entries, 5000, 1));
+	value = string(gen_string('A' + replayed_entries, 40000, 1));
 	ret = db->Put(write_options, key, value);
 	status_assert(ret);
 	assert(read_and_verify(db) == replayed_entries + 1);

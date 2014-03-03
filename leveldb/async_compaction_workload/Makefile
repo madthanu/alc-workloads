@@ -1,6 +1,6 @@
 LEVELDB_SRC = ../leveldb-1.10.0
 EXECUTABLES = workload checker init
-DEPENDENCIES = ../myutils.h Makefile
+DEPENDENCIES = ../myutils.h Makefile common.h
 
 all: $(EXECUTABLES)
 

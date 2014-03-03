@@ -20,3 +20,5 @@ function do_workload {
 
 initialize_workload
 do_workload
+
+sed -i 's:\(open("\./tmp/strace\.out\.mtrace\.byte_dump\):ignore_\1:g' $(ls tmp/strace.out.* | grep -v byte_dump | grep -v mtrace)

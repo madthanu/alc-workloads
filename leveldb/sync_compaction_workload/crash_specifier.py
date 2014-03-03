@@ -10,25 +10,43 @@ load(0)
 
 def prefix_run():
 	load(0)
+	keep_list = []
 	for i in range(0, dops_len()):
+		keep_list.append(i)
+		checker_params = dops_implied_stdout(keep_list)
+
 		E = str(i) + str(dops_double(i))
 		dops_end_at(dops_double(i))
-		dops_replay(str('E' + E))
+		dops_replay(str(datetime.datetime.now()) +
+				' E' + E, checker_params = checker_params)
 
 def omit_one_heuristic():
 	load(0)
+	last = None # Just used for asserting that the algorithm is correct
 
 	for i in range(0, dops_len()):
+		load(0)
+
 		till = dops_single(dops_independent_till(dops_double(i)))
+		# 'till' now contains the index of the last disk_op, till which
+		# execution can continue legally, while omitting (i.e., still
+		# buffering in memory) the 'i'th disk_op.
 
 		for j in range(i + 1, till + 1):
+			load(0)
 			R = str(i) + str(dops_double(i))
 			E = str(j) + str(dops_double(j))
-			dops_end_at(dops_double(j))
+			end_at(dops_double(j))
 			dops_omit(dops_double(i))
-			dops_replay(' R' + R + ' E' + E)
-			
-			load(0)
+			last = (i, j)
+			dops_replay(str(datetime.datetime.now()) +
+						' R' + R +
+						' E' + E)
+			load(0) # This is actually the only load(0) required
+				# inside any of the for loops. The others are there just for readability.
+
+	assert last == (dops_len() - 2, dops_len() - 1)
+
 def omit_range_heuristic():
 	load(0)
 
@@ -86,11 +104,5 @@ def example_calls():
 	dops_end_at(dops_double(2))
 	dops_replay()
 
-#dops_replay()
-#prefix_run()
-#omit_one_heuristic()
-dops_omit((12, 2))
-dops_omit((12, 1))
-dops_omit((12, 0))
-dops_end_at((18,0))
-dops_replay()
+prefix_run()
+#dops_replay(checker_params=(3, 'beforeafter', 'beforeafter'))
