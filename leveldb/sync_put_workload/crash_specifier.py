@@ -1,4 +1,5 @@
 import datetime
+import copy
 load(0)
 
 # NOTE: There is one important distinction between the remove() calls and the
@@ -22,31 +23,24 @@ def prefix_run():
 
 def omit_one_heuristic():
 	load(0)
-	last = None # Just used for asserting that the algorithm is correct
 
+	full_keep_list = []
 	for i in range(0, dops_len()):
-		load(0)
-
+		full_keep_list.append(i)
 		till = dops_single(dops_independent_till(dops_double(i)))
-		# 'till' now contains the index of the last disk_op, till which
-		# execution can continue legally, while omitting (i.e., still
-		# buffering in memory) the 'i'th disk_op.
 
 		for j in range(i + 1, till + 1):
-			load(0)
+			keep_list = copy.deepcopy(full_keep_list)
+			keep_list.remove(j)
+			checker_params = dops_implied_stdout(keep_list)
+
 			R = str(i) + str(dops_double(i))
 			E = str(j) + str(dops_double(j))
-			end_at(dops_double(j))
+			dops_end_at(dops_double(j))
 			dops_omit(dops_double(i))
-			last = (i, j)
-			dops_replay(str(datetime.datetime.now()) +
-						' R' + R +
-						' E' + E)
-			load(0) # This is actually the only load(0) required
-				# inside any of the for loops. The others are there just for readability.
-
-	assert last == (dops_len() - 2, dops_len() - 1)
-
+			dops_replay(' R' + R + ' E' + E, checker_params = checker_params)
+			
+			load(0)
 def omit_range_heuristic():
 	load(0)
 
