@@ -37,8 +37,8 @@ int main(int argc, char *argv[]) {
 	assert(replayed_entries == 2);
 
 	write_options.sync = true;
-	key = string(gen_string('a', 5000, 0));
-	value = string(gen_string('A', 5000, 1));
+	key = string(gen_string('a' + replayed_entries, 5000, 0));
+	value = string(gen_string('A' + replayed_entries, 5000, 1));
 	ret = db->Put(write_options, key, value);
 	status_assert(ret);
 	assert(read_and_verify(db) == replayed_entries + 1);
