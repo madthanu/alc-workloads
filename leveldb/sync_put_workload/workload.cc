@@ -17,7 +17,9 @@ int main(int argc, char *argv[]) {
 	WriteOptions write_options;
 	string key, value;
 	Status ret;
+	int i;
 
+	options.write_buffer_size = WRITE_BUFFER_SIZE;
 	options.create_if_missing = true;
 	ret = DB::Open(options, db_path(), &db);
 

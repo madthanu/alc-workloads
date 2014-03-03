@@ -11,6 +11,7 @@
 using namespace std;
 using namespace leveldb;
 
+
 int main(int argc, char *argv[]) {
 	DB* db;
 	Options options;
@@ -25,6 +26,7 @@ int main(int argc, char *argv[]) {
 
 	write_options.sync = true;
 
+	printf("opened\n");
 	for(i = 0; i < 3; i++) {
 		key = string(gen_string('c' + i, 5000, 0));
 		value = string(gen_string('C' + i, 40000, 1));
@@ -33,5 +35,6 @@ int main(int argc, char *argv[]) {
 		printf("after %d\n", i);
 		status_assert(ret);
 	}
+	printf("closing\n");
 	delete db;
 }

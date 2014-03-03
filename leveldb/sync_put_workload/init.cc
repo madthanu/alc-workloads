@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 	Options options;
 	Status ret;
 	WriteOptions write_options;
-string key, value;
+	string key, value;
 
 	options.create_if_missing = true;
 	options.paranoid_checks = true;

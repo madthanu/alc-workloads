@@ -24,21 +24,19 @@ def prefix_run():
 def omit_one_heuristic():
 	load(0)
 
-	full_keep_list = []
 	for i in range(0, dops_len()):
-		full_keep_list.append(i)
+		keep_list = range(0, i)
 		till = dops_single(dops_independent_till(dops_double(i)))
 
 		for j in range(i + 1, till + 1):
-			keep_list = copy.deepcopy(full_keep_list)
-			keep_list.remove(j)
+			keep_list.append(j)
 			checker_params = dops_implied_stdout(keep_list)
 
 			R = str(i) + str(dops_double(i))
 			E = str(j) + str(dops_double(j))
 			dops_end_at(dops_double(j))
 			dops_omit(dops_double(i))
-			dops_replay(' R' + R + ' E' + E, checker_params = checker_params)
+			dops_replay('R' + R + ' E' + E, checker_params = checker_params)
 			
 			load(0)
 def omit_range_heuristic():
@@ -98,5 +96,6 @@ def example_calls():
 	dops_end_at(dops_double(2))
 	dops_replay()
 
-prefix_run()
+#prefix_run()
 #dops_replay(checker_params=(3, 'beforeafter', 'beforeafter'))
+omit_one_heuristic()

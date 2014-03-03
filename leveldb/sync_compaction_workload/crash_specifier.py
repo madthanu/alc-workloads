@@ -1,4 +1,5 @@
 import datetime
+import copy
 load(0)
 
 # NOTE: There is one important distinction between the remove() calls and the
@@ -8,11 +9,11 @@ load(0)
 # removes three separate disk operations. However, "dops_omit(31);
 # dops_omit(31); dops_omit(31);" omits only one oepration.
 
-def prefix_run():
+def prefix_run(start, end):
 	load(0)
-	keep_list = []
-	for i in range(0, dops_len()):
-		keep_list.append(i)
+
+	for i in range(start, end + 1):
+		keep_list = range(0, i + 1)
 		checker_params = dops_implied_stdout(keep_list)
 
 		E = str(i) + str(dops_double(i))
@@ -20,33 +21,24 @@ def prefix_run():
 		dops_replay(str(datetime.datetime.now()) +
 				' E' + E, checker_params = checker_params)
 
-def omit_one_heuristic():
+def omit_one_heuristic(start, end):
 	load(0)
-	last = None # Just used for asserting that the algorithm is correct
 
-	for i in range(0, dops_len()):
-		load(0)
-
+	for i in range(start, end + 1):
+		keep_list = range(0, i)
 		till = dops_single(dops_independent_till(dops_double(i)))
-		# 'till' now contains the index of the last disk_op, till which
-		# execution can continue legally, while omitting (i.e., still
-		# buffering in memory) the 'i'th disk_op.
 
-		for j in range(i + 1, till + 1):
-			load(0)
+		for j in range(i + 1, end + 1):
+			keep_list.append(j)
+			checker_params = dops_implied_stdout(keep_list)
+
 			R = str(i) + str(dops_double(i))
 			E = str(j) + str(dops_double(j))
-			end_at(dops_double(j))
+			dops_end_at(dops_double(j))
 			dops_omit(dops_double(i))
-			last = (i, j)
-			dops_replay(str(datetime.datetime.now()) +
-						' R' + R +
-						' E' + E)
-			load(0) # This is actually the only load(0) required
-				# inside any of the for loops. The others are there just for readability.
-
-	assert last == (dops_len() - 2, dops_len() - 1)
-
+			dops_replay('R' + R + ' E' + E, checker_params = checker_params)
+			
+			load(0)
 def omit_range_heuristic():
 	load(0)
 
@@ -104,5 +96,22 @@ def example_calls():
 	dops_end_at(dops_double(2))
 	dops_replay()
 
-prefix_run()
 #dops_replay(checker_params=(3, 'beforeafter', 'beforeafter'))
+for i in range(0, len(micro_ops)):
+	op = get_op(i)
+	if op.op == 'stdout':
+		if 'opened' in op.data:
+			for j in range(i + 1, len(micro_ops)):
+				if get_op(j).op != 'stdout':
+					start = j
+					break
+		if 'closing' in op.data:
+			for j in range(i, -1, -1):
+				if get_op(j).op != 'stdout':
+					end = j
+					break
+
+start = dops_single((start, 0))
+end = dops_single((end, 0)) + 1 # Adding 1 to the end ... making sure omit_one invokes the case where that last operation is omitted ## Doesn't prefix already take care of this?
+print (start, end)
+omit_one_heuristic(start, end)
