@@ -1,12 +1,18 @@
 import os
+import re
 prefix = "tmp/strace.out"
 initial_snapshot = "tmp/snapshot"
 replayed_snapshot = "/tmp/replayed_snapshot"
-base_path = os.getcwd() + "/workload_dir/"
+base_path = os.getcwd() + "/workload_dir"
 orderings_script = "crash_specifier.py"
 checker_tool = "./checker.sh"
 starting_cwd = "."
-#hide_diskops = True
-filter_cache_file = "tmp/filter_cache"
-micro_cache_file = "tmp/micro_cache"
+hide_diskops = False
 replayer_threads = 8
+YYYY = base_path
+def t_interesting_path_function(path):
+	global YYYY
+	if re.search('LOG', path):
+		return False
+	return re.search(r'^' + YYYY, path)
+interesting_path_function = t_interesting_path_function

@@ -27,7 +27,8 @@ cp -R /tmp/checker_$$/workload_dir "$workload_dir"
 repairdb=0 checksums_verify=1 ./checker "$@" 2>&1 | tee -a /tmp/checker_$$/long_output > /tmp/checker_$$/short_output_tmp
 (cat /tmp/checker_$$/short_output_tmp | tr '\n' '.'; echo) >> /tmp/checker_$$/short_output
 
+sed -i 's/Fully correct\./C/g' /tmp/checker_$$/short_output
+
 cat /tmp/checker_$$/short_output | tr '\n' ';'
 
 rm -rf /tmp/checker_$$
-
