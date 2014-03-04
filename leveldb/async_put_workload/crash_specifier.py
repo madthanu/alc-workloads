@@ -8,17 +8,16 @@ load(0)
 # removes three separate disk operations. However, "dops_omit(31);
 # dops_omit(31); dops_omit(31);" omits only one oepration.
 
-def prefix_run():
-	load(0)
-	for i in range(0, dops_len()):
+def prefix_run(start):
+	for i in range(start, dops_len()):
 		E = str(i) + str(dops_double(i))
 		dops_end_at(dops_double(i))
 		dops_replay(str('E' + E))
 
-def omit_one_heuristic():
-	load(0)
+def omit_one_heuristic(start):
+	load(1)
 
-	for i in range(0, dops_len()):
+	for i in range(start, dops_len()):
 		till = dops_single(dops_independent_till(dops_double(i)))
 
 		for j in range(i + 1, till + 1):
@@ -28,7 +27,7 @@ def omit_one_heuristic():
 			dops_omit(dops_double(i))
 			dops_replay(' R' + R + ' E' + E)
 			
-			load(0)
+			load(1)
 def omit_range_heuristic():
 	load(0)
 
@@ -86,4 +85,15 @@ def example_calls():
 	dops_end_at(dops_double(2))
 	dops_replay()
 
-prefix_run()
+#prefix_run()
+#dops_generate(splits=4096, split_mode = 'aligned')
+#prefix_run(dops_single((26, 0)))
+#omit_one_heuristic()
+dops_omit((22, 0))
+dops_omit((22, 1))
+dops_omit((22, 2))
+dops_omit((22, 3))
+dops_omit((22, 4))
+dops_omit((22, 5))
+save(1)
+omit_one_heuristic(dops_single((23, 0)))

@@ -87,5 +87,7 @@ def example_calls():
 	dops_replay()
 
 #dops_replay()
-prefix_run()
+#prefix_run()
+#omit_one_heuristic()
 
+dops_replay()
