@@ -26,8 +26,6 @@ def initial_filter(line):
 			parts[i] = 'Exception'
 		elif 'Assertion `replayed_entries >= 2\' failed.' in parts[i]:
 			parts[i] = 'Durability silent'
-		elif 'Assertion `replayed_entries == 2\' failed.' in parts[i]:
-			parts[i] = 'Durability silent'
 		elif parts[i] in ['C', '']:
 			parts[i] = parts[i]
 		else:
@@ -91,7 +89,7 @@ for state in incorrect_states[8:11]:
  
 #uniq_msgs=set()
 
-def converter(msg, situation, width = '', filter = True):
+def converter(msg, situation, width = 20, filter = True):
 	msg = re.sub(r'/tmp/replayed_snapshot/[0-9]+/', '/tmp/replayed_snapshot/', msg)
 	if filter:
 		msg = initial_filter(msg)

@@ -86,8 +86,16 @@ def example_calls():
 	dops_end_at(dops_double(2))
 	dops_replay()
 
-#dops_replay()
-#prefix_run()
-#omit_one_heuristic()
+def omit_micro_op(micro_ops):
+	for micro_op in micro_ops:
+		dlen = len(get_op(micro_op).hidden_disk_ops)
+		for j in range(0, dlen):
+			dops_omit((micro_op, j))
 
-dops_replay()
+for omissions in [[22], [22, 23], [22, 24]]:
+	load(0)
+	omit_micro_op(omissions)
+	for j in [(24, 3), (25, 0), (25, 2)]:
+		dops_end_at(j)
+		dops_replay('RM' + str(omissions) + 'E' + str(j))
+	

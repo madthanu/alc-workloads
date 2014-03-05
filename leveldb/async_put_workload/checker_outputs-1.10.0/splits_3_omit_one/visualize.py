@@ -26,8 +26,6 @@ def initial_filter(line):
 			parts[i] = 'Exception'
 		elif 'Assertion `replayed_entries >= 2\' failed.' in parts[i]:
 			parts[i] = 'Durability silent'
-		elif 'Assertion `replayed_entries == 2\' failed.' in parts[i]:
-			parts[i] = 'Durability silent'
 		elif parts[i] in ['C', '']:
 			parts[i] = parts[i]
 		else:

@@ -15,7 +15,7 @@ def prefix_run(start):
 		dops_replay(str('E' + E))
 
 def omit_one_heuristic(start):
-	load(1)
+	load(0)
 
 	for i in range(start, dops_len()):
 		till = dops_single(dops_independent_till(dops_double(i)))
@@ -27,7 +27,7 @@ def omit_one_heuristic(start):
 			dops_omit(dops_double(i))
 			dops_replay(' R' + R + ' E' + E)
 			
-			load(1)
+			load(0)
 def omit_range_heuristic():
 	load(0)
 
@@ -86,14 +86,19 @@ def example_calls():
 	dops_replay()
 
 #prefix_run()
-#dops_generate(splits=4096, split_mode = 'aligned')
-#prefix_run(dops_single((26, 0)))
+#dops_generate(26, splits=4096, split_mode = 'aligned')
+#dops_generate(27, splits=4096, split_mode = 'aligned')
+#dops_set_legal()
+#save(1)
+#prefix_run(dops_single((0, 0)))
 #omit_one_heuristic()
-dops_omit((22, 0))
-dops_omit((22, 1))
-dops_omit((22, 2))
-dops_omit((22, 3))
-dops_omit((22, 4))
-dops_omit((22, 5))
-save(1)
-omit_one_heuristic(dops_single((23, 0)))
+#omit_one_heuristic(dops_single((26, 0)))
+
+def omit_micro_op(micro_ops):
+	for micro_op in micro_ops:
+		dlen = len(get_op(micro_op).hidden_disk_ops)
+		for j in range(0, dlen):
+			dops_omit((micro_op, j))
+
+omit_one_heuristic(0)
+
