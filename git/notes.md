@@ -52,7 +52,7 @@ Bugs/Issues
 
    *Note:* The rename of 'index.lock' is done first, as part of 'git add'. However, as the first step 'git commit', 'index.lock' is created and then immediately unlinked. I do not understand why git commit does this. My best guess is that, during 'git commit',  Git checks for the existence of 'index.lock' (i.e., whether the create call succeeds), and then proceeds only if the lock doesn't exist (we are talking about the workload phase here, before any crashes, so the rename() call of 'git add' would make sure that the lock does not exist). When a crash happens, if only the rename of 'index.lock' does not go to the disk (the create and unlink did end up in the disk), then the consequence described in the previous paragraph would directly result. However, if the create and the unlink are also lost, Git will indicate the existence of 'index.lock' with certain checks, similar to issue (1).
 
-   *Exposed in actual file systems?* No, as far as we know.
+   *Exposed in actual file systems?* Might be exposed in Btrfs.
 
 5. The workload involves a few mkdir()-s, and then file creations within the new directory. The parent directory of the mkdir() needs to be fsync()-ed for correctness. (Safe new file flush for directories).
 
