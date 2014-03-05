@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import sys
-sys.path.append('/root/application_fs_bugs/alc-strace')
+sys.path.append('/scratch/madthanu/application-fs-bugs/alc-strace')
 import visualize_crash_outputs as visualize
 import pprint
 from collections import OrderedDict
@@ -80,7 +80,7 @@ colormap['\tC; C, T; C; inC, git-add; inC checkout, first commit; T'] = '#FFAAAA
 for state in incorrect_states:
 	assert state in colormap
 
-def converter(msg):
+def converter(msg, situation):
 	global correct_states, incorrect_states, colormap
 	if msg in correct_states:
 		if not detailed:
@@ -107,15 +107,15 @@ def converter(msg):
 		else:
 			second_visibility = 'hidden'
 
-		html_output = "<td bgcolor='%s'>" \
+		html_output = "<td onclick='window.document.title=\"%s\"' bgcolor='%s'>" \
 				"<div style='color:#ff0000; font-weight:bold; visibility:%s'>DD</div>" \
 				"<div style='color:#ffffff; font-weight:bold; visibility:%s'>LL</div>" \
-				"</td>" % (color, first_visibility, second_visibility)
+				"</td>" % (situation, color, first_visibility, second_visibility)
 		return html_output
 	elif msg in incorrect_states:
 		if not detailed:
 			return visualize.color_cell('Red')
-		return "<td bgcolor='%s'></td>" % colormap[msg]
+		return "<td onclick='window.document.title=\"%s\"' bgcolor='%s'></td>" % (situation, colormap[msg])
 	else:
 		print 'Unhandled: ' + msg
 		assert False
@@ -123,9 +123,9 @@ def converter(msg):
 def get_legend():
 	toret = OrderedDict()
 	for state in colormap:
-		toret[state] = converter(state)
+		toret[state] = converter(state, '')
 	for state in correct_states:
-		toret[state] = converter(state)
+		toret[state] = converter(state, '')
 	return toret
 
 visualize.visualize('\n', converter, get_legend(), './short_outputs', './html_output.html')
