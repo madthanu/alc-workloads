@@ -1,3 +1,4 @@
 .*.swp
 html_output.html
 out.jpeg
+strace.out.*
