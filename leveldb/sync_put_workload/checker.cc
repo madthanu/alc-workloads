@@ -35,15 +35,21 @@ int main(int argc, char *argv[]) {
 	ret = DB::Open(options, db_path(), &db);
 	status_assert(ret);
 	int replayed_entries = read_and_verify(db);
-	if(strstr(replayed_stdout, "after") != NULL) {
-		// printf("Checking after after. ");
-		assert(replayed_entries == 3);
-	} else if (strstr(replayed_stdout, "before") == NULL) {
+	if (strstr(replayed_stdout, "before 0") == NULL) {
 		// printf("Checking before before. ");
 		assert(replayed_entries == 2);
-	} else {
+	} else if(strstr(replayed_stdout, "after 0") == NULL) {
 		// printf("Checking between before and after. ");
 		assert(replayed_entries == 2 || replayed_entries == 3);
+	} else if (strstr(replayed_stdout, "before 1") == NULL) {
+		// printf("Checking before before. ");
+		assert(replayed_entries == 3);
+	} else if(strstr(replayed_stdout, "after 1") == NULL) {
+		// printf("Checking between before and after. ");
+		assert(replayed_entries == 3 || replayed_entries == 4);
+	} else {
+		// printf("Checking before before. ");
+		assert(replayed_entries == 4);
 	}
 	write_options.sync = true;
 	key = string(gen_string('a' + replayed_entries, 5000, 0));

@@ -1,12 +1,12 @@
-#!/usr/bin/python
+#!/s/python-2.7.3/bin/python
 import sys
-sys.path.append('/scratch/madthanu/application-fs-bugs/alc-strace')
+sys.path.append('/scratch/madthanu/application-fs-bugs/alc-strace/visualizer')
 import visualize_crash_outputs as visualize
 import pprint
 from collections import OrderedDict
 import re
-
-visualize.init_cmdline()
+import argparse
+import os
 
 detailed = True
 
@@ -24,9 +24,11 @@ def initial_filter(line):
 			parts[i] = 'Silent consistency'
 		elif 'Assertion `ret.ok()\' failed.' in parts[i]:
 			parts[i] = 'Exception'
-		elif 'Corruption: ' in parts[i]:
+		elif 'Assertion `it->status().ok()\' failed.' in parts[i]:
 			parts[i] = 'Exception'
-		elif 'Assertion `replayed_entries >= 2\' failed.' in parts[i]:
+		elif 'Assertion `replayed_entries == ' in parts[i]:
+			parts[i] = 'Durability silent'
+		elif 'Assertion `replayed_entries >= ' in parts[i]:
 			parts[i] = 'Durability silent'
 		elif parts[i] in ['C', '']:
 			parts[i] = parts[i]
@@ -49,7 +51,10 @@ incorrect_states = [
  'Exception;Exception;;Durability silent;Durability silent;',
  'Exception;Exception;;Silent consistency;Silent consistency;',
  'Exception;Exception;;Silent corruption;Silent corruption;',
+ 'Durability silent;Durability silent;;Durability silent;Durability silent;',
+ 'Silent consistency;Exception;;Silent corruption;Silent corruption;',
  'C;C;;Exception;Exception;',
+ 'Silent consistency;Exception;;C;C;',
 ]
 
 correct_states = ['C;C;;C;C;',
@@ -66,7 +71,7 @@ for state in correct_states[1:]:
 	colormap[state] = '#44FF00'
 	legend[state] = 'Exception before recovery, sometimes only with checksum-checking; fine afterwards'
 
-for state in incorrect_states[0:2]:
+for state in incorrect_states[0:2] + incorrect_states[13:14]:
 	colormap[state] = '#FF0000'
 	legend[state] = 'Correct with or without checksums before recovery; Silent consistency or durability problems afterwards'
 
@@ -78,13 +83,13 @@ for state in incorrect_states[4:6]:
 	colormap[state] = '#0000FF'
 	legend[state] = 'Silent durability or consistency problems before recovery (with or without checksums); fine afterwards'
 
-for state in incorrect_states[6:7]:
+for state in incorrect_states[6:7] + incorrect_states[14:15]:
 	colormap[state] = '#000099'
-	legend[state] = 'Silent durability without checksums before recovery, exception with checksums); fine afterwards'
+	legend[state] = 'Silent durability or consistency without checksums before recovery, exception with checksums; fine afterwards'
 
-for state in incorrect_states[7:8]:
+for state in incorrect_states[7:8] + incorrect_states[12:13]:
 	colormap[state] = '#777777'
-	legend[state] = 'Silent durability without checksums before recovery, exception with checksums); silent corruption afterwards'
+	legend[state] = 'Silent durability/consistency without checksums before recovery, exception with checksums; silent corruption afterwards'
 
 for state in incorrect_states[8:11]:
 	colormap[state] = '#000000'
@@ -92,9 +97,7 @@ for state in incorrect_states[8:11]:
 
 for state in incorrect_states[11:12]:
 	colormap[state] = '#FF00FF'
-	legend[state] = 'Correct with or without checksums before recovery; exception afterwards'
- 
-#uniq_msgs=set()
+	legend[state] = 'Durability silent loss'
 
 def converter(msg, situation, width = '', filter = True):
 	msg = re.sub(r'/tmp/replayed_snapshot/[0-9]+/', '/tmp/replayed_snapshot/', msg)
@@ -107,7 +110,25 @@ def converter(msg, situation, width = '', filter = True):
 	assert msg in colormap
 	if width != '':
 		width = 'width=' + str(width)
-	return "<td %s bgcolor='%s' onclick=\"window.document.title='%s';return true\"></td>" % (width, colormap[msg], situation)
+	else:
+		width = 'width="10" height="10"'
+	onclick = ''
+	if situation != '':
+		parts = situation.replace(', ', ',').replace('R', '').replace('E', '').split()
+		omitted = '(' + parts[0] + ')'
+		omitted_micro = parts[0].split(',')[0]
+		end_at = '(' + parts[1] + ')'
+		end_at_micro = parts[1].split(',')[0]
+		onclick = 'onclick="'
+		onclick += 'clear_highlight();'
+		onclick += 'highlight(\'' + omitted +'\', \'red\');'
+		onclick += 'highlight(\'' + omitted_micro +'\', \'pink\');'
+		onclick += 'highlight(\'' + end_at +'\', \'blue\');'
+		onclick += 'highlight(\'' + end_at_micro +'\', \'cyan\');'
+		onclick += '"'
+		#print omitted + ' ' + end_at
+	return "<td %s bgcolor='%s' %s;return true\"></td>" % (width, colormap[msg], onclick)
+
 
 def get_legend():
 	toret = OrderedDict()
@@ -115,5 +136,15 @@ def get_legend():
 		toret[legend[state]] = converter(state, '', 5, False)
 	return toret
 
-visualize.visualize('\n', converter, get_legend(), './replay_output', './html_output.html')
+parser = argparse.ArgumentParser()
+parser.add_argument('--image', dest = 'image', action='store_true')
+parser.set_defaults(image=False)
+args = parser.parse_args()
+
+
+if args.image:
+	visualize.omitone('\n', converter, get_legend(), './replay_output', '/tmp/html_output.html', image = args.image)
+	os.system("mkimg " + "/tmp/html_output.html")
+else:
+	visualize.omitone('\n', converter, get_legend(), './replay_output', './html_output.html', image = args.image)
 

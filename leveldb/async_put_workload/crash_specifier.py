@@ -100,5 +100,17 @@ def omit_micro_op(micro_ops):
 		for j in range(0, dlen):
 			dops_omit((micro_op, j))
 
-omit_one_heuristic(0)
+#dops_omit((12, 5))
+#dops_omit((12, 8))
+#dops_omit((12, 2))
 
+#dops_end_at((21, 5))
+
+#dops_replay()
+
+#prefix_run(0)
+
+dops_generate(splits=4096, split_mode='aligned')
+dops_set_legal()
+save(0)
+omit_one_heuristic(0)

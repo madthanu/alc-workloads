@@ -98,4 +98,19 @@ def example_calls():
 
 #prefix_run()
 #dops_replay(checker_params=(3, 'beforeafter', 'beforeafter'))
-omit_one_heuristic()
+
+#dops_generate(splits=1)
+#dops_set_legal()
+#save(0)
+print 1
+dops_omit((3,0))
+dops_omit((3,1))
+dops_omit((3,2))
+print 2
+dops_end_at((9,2))
+print 3
+dops_replay()
+print 4
+dops_replay()
+#omit_one_heuristic()
+

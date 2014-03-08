@@ -19,17 +19,19 @@ int main(int argc, char *argv[]) {
 	Status ret;
 	int i;
 
-	options.write_buffer_size = WRITE_BUFFER_SIZE;
+	printf("Version %d.%d, sync put workload\n", kMajorVersion, kMinorVersion);
 	options.create_if_missing = true;
 	ret = DB::Open(options, db_path(), &db);
 
 	write_options.sync = true;
-	key = string(gen_string('c', 5000, 0));
-	value = string(gen_string('C', 5000, 1));
-	printf("before\n");
-	ret = db->Put(write_options, key, value);
-	printf("after\n");
-	status_assert(ret);
+	for(i = 0; i < 2; i++) {
+		key = string(gen_string('c' + i, 5000, 0));
+		value = string(gen_string('C' + i, 5000, 1));
+		printf("before %d\n", i);
+		ret = db->Put(write_options, key, value);
+		printf("after %d\n", i);
+		status_assert(ret);
+	}
 	delete db;
 }
 
