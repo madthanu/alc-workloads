@@ -111,7 +111,10 @@ for i in range(0, len(micro_ops)):
 					end = j
 					break
 
-start = dops_single((start, 0))
-end = dops_single((end, 0)) + 1 # Adding 1 to the end ... making sure omit_one invokes the case where that last operation is omitted ## Doesn't prefix already take care of this?
-print (start, end)
-omit_one_heuristic(start, end)
+#start = dops_single((start, 0))
+#end = dops_single((end, 0)) + 1 # Adding 1 to the end ... making sure omit_one invokes the case where that #last operation is omitted ## Doesn't prefix already take care of this?
+#print (start, end)
+#omit_one_heuristic(start, end)
+print dops_len()
+omit_one_heuristic(0, dops_len() - 1)
+#prefix_run(0, dops_len() - 1)

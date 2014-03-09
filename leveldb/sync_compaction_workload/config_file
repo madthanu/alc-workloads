@@ -8,7 +8,7 @@ orderings_script = "crash_specifier.py"
 checker_tool = "./checker.sh"
 starting_cwd = "."
 hide_diskops = False
-replayer_threads = 7
+replayer_threads = 15
 YYYY = base_path
 def t_interesting_path_function(path):
 	global YYYY
@@ -16,3 +16,4 @@ def t_interesting_path_function(path):
 		return False
 	return re.search(r'^' + YYYY, path)
 interesting_path_function = t_interesting_path_function
+micro_cache_file = 'tmp/micro_cache'

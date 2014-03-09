@@ -110,7 +110,15 @@ def omit_micro_op(micro_ops):
 
 #prefix_run(0)
 
-dops_generate(splits=4096, split_mode='aligned')
-dops_set_legal()
-save(0)
-omit_one_heuristic(0)
+#dops_generate(splits=4096, split_mode='aligned')
+#dops_set_legal()
+#save(0)
+#omit_one_heuristic(0)
+
+dops_generate(splits = 1)
+dops_omit((22, 0))
+dops_omit((22, 1))
+dops_omit((22, 2))
+dops_omit((22, 3))
+dops_end_at((23, 1))
+dops_replay()
