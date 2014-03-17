@@ -1,0 +1,265 @@
+[00;32m0[0m	[00;33m0[0m	creat("[00;42m.git/index.lock[0m", parent=867, mode='0666', inode=894)
+	0	create_dir_entry(mode='0666', parent=867, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/index.lock', entry_type=1, inode=894)
+[00;32m1[0m	[00;33m1[0m	mkdir("[00;44m.git/objects/b5[0m", parent=875, mode='0777', inode=895)
+	0	create_dir_entry(mode=511, parent=875, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/b5', entry_type=0, inode=895)
+[00;32m2[0m	[00;33m2[0m	creat("[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", parent=895, mode='0444', inode=896)
+	0	create_dir_entry(mode='0444', parent=895, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/b5/tmp_obj_XNTT1b', entry_type=1, inode=896)
+[00;32m3[0m	[00;33m3[0m	append("[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", count=4096, dump_offset=0, offset=0, inode=896, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=0, inode=896, final_size=1366)[0m
+	1	[00;33mwrite(offset=0, count=1366, dump_offset=0, inode=896)[0m
+	2	[00;33mwrite(offset=0, count=1366, dump_offset=0, inode=896)[0m
+	3	[00;33mtruncate(initial_size=1366, inode=896, final_size=2732)[0m
+	4	[00;33mwrite(offset=1366, count=1366, dump_offset=0, inode=896)[0m
+	5	[00;33mwrite(offset=1366, count=1366, dump_offset=1366, inode=896)[0m
+	6	[00;33mtruncate(initial_size=2732, inode=896, final_size=4096)[0m
+	7	[00;33mwrite(offset=2732, count=1364, dump_offset=0, inode=896)[0m
+	8	[00;33mwrite(offset=2732, count=1364, dump_offset=2732, inode=896)[0m
+[00;32m4[0m	[00;33m4[0m	append("[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", count=4096, dump_offset=4096, offset=4096, inode=896, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=4096, inode=896, final_size=5462)[0m
+	1	[00;33mwrite(offset=4096, count=1366, dump_offset=0, inode=896)[0m
+	2	[00;33mwrite(offset=4096, count=1366, dump_offset=4096, inode=896)[0m
+	3	[00;33mtruncate(initial_size=5462, inode=896, final_size=6828)[0m
+	4	[00;33mwrite(offset=5462, count=1366, dump_offset=0, inode=896)[0m
+	5	[00;33mwrite(offset=5462, count=1366, dump_offset=5462, inode=896)[0m
+	6	[00;33mtruncate(initial_size=6828, inode=896, final_size=8192)[0m
+	7	[00;33mwrite(offset=6828, count=1364, dump_offset=0, inode=896)[0m
+	8	[00;33mwrite(offset=6828, count=1364, dump_offset=6828, inode=896)[0m
+[00;32m5[0m	[00;33m5[0m	append("[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", count=4096, dump_offset=8192, offset=8192, inode=896, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=8192, inode=896, final_size=9558)[0m
+	1	[00;33mwrite(offset=8192, count=1366, dump_offset=0, inode=896)[0m
+	2	[00;33mwrite(offset=8192, count=1366, dump_offset=8192, inode=896)[0m
+	3	[00;33mtruncate(initial_size=9558, inode=896, final_size=10924)[0m
+	4	[00;33mwrite(offset=9558, count=1366, dump_offset=0, inode=896)[0m
+	5	[00;33mwrite(offset=9558, count=1366, dump_offset=9558, inode=896)[0m
+	6	[00;33mtruncate(initial_size=10924, inode=896, final_size=12288)[0m
+	7	[00;33mwrite(offset=10924, count=1364, dump_offset=0, inode=896)[0m
+	8	[00;33mwrite(offset=10924, count=1364, dump_offset=10924, inode=896)[0m
+[00;32m6[0m	[00;33m6[0m	append("[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", count=4096, dump_offset=12288, offset=12288, inode=896, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=12288, inode=896, final_size=13654)[0m
+	1	[00;33mwrite(offset=12288, count=1366, dump_offset=0, inode=896)[0m
+	2	[00;33mwrite(offset=12288, count=1366, dump_offset=12288, inode=896)[0m
+	3	[00;33mtruncate(initial_size=13654, inode=896, final_size=15020)[0m
+	4	[00;33mwrite(offset=13654, count=1366, dump_offset=0, inode=896)[0m
+	5	[00;33mwrite(offset=13654, count=1366, dump_offset=13654, inode=896)[0m
+	6	[00;33mtruncate(initial_size=15020, inode=896, final_size=16384)[0m
+	7	[00;33mwrite(offset=15020, count=1364, dump_offset=0, inode=896)[0m
+	8	[00;33mwrite(offset=15020, count=1364, dump_offset=15020, inode=896)[0m
+[00;32m7[0m	[00;33m7[0m	append("[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", count=4096, dump_offset=16384, offset=16384, inode=896, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=16384, inode=896, final_size=17750)[0m
+	1	[00;33mwrite(offset=16384, count=1366, dump_offset=0, inode=896)[0m
+	2	[00;33mwrite(offset=16384, count=1366, dump_offset=16384, inode=896)[0m
+	3	[00;33mtruncate(initial_size=17750, inode=896, final_size=19116)[0m
+	4	[00;33mwrite(offset=17750, count=1366, dump_offset=0, inode=896)[0m
+	5	[00;33mwrite(offset=17750, count=1366, dump_offset=17750, inode=896)[0m
+	6	[00;33mtruncate(initial_size=19116, inode=896, final_size=20480)[0m
+	7	[00;33mwrite(offset=19116, count=1364, dump_offset=0, inode=896)[0m
+	8	[00;33mwrite(offset=19116, count=1364, dump_offset=19116, inode=896)[0m
+[00;32m8[0m	[00;33m8[0m	append("[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", count=507, dump_offset=20480, offset=20480, inode=896, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=20480, inode=896, final_size=20649)[0m
+	1	[00;33mwrite(offset=20480, count=169, dump_offset=0, inode=896)[0m
+	2	[00;33mwrite(offset=20480, count=169, dump_offset=20480, inode=896)[0m
+	3	[00;33mtruncate(initial_size=20649, inode=896, final_size=20818)[0m
+	4	[00;33mwrite(offset=20649, count=169, dump_offset=0, inode=896)[0m
+	5	[00;33mwrite(offset=20649, count=169, dump_offset=20649, inode=896)[0m
+	6	[00;33mtruncate(initial_size=20818, inode=896, final_size=20987)[0m
+	7	[00;33mwrite(offset=20818, count=169, dump_offset=0, inode=896)[0m
+	8	write(offset=20818, count=169, dump_offset=20818, inode=896)
+[00;32m9[0m	[00;33m9[0m	[00;31mfsync[0m("[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", inode=896, size=20987)
+	0	[00;31msync[0m(count=20987, offset=0, inode=896)
+[00;32m10[0m	[00;33m10[0m	link(source_parent=895, dest="[00;41m.git/objects/b5/782f851c2c3aeac48234cb2d79e240e93311eb[0m", dest_parent=895, source="[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", source_inode=896)
+	0	create_dir_entry(mode=None, parent=895, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/b5/782f851c2c3aeac48234cb2d79e240e93311eb', entry_type=1, inode=896)
+[00;32m11[0m	[00;33m11[0m	unlink("[00;33m.git/objects/b5/tmp_obj_XNTT1b[0m", parent=895, hardlinks=2, inode=896, size=20987)
+	0	[00;33mdelete_dir_entry(parent=895, entry_type=1, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/b5/tmp_obj_XNTT1b', inode=896)[0m
+[00;32m12[0m	[00;33m12[0m	mkdir("[00;36m.git/objects/0f[0m", parent=875, mode='0777', inode=897)
+	0	create_dir_entry(mode=511, parent=875, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/0f', entry_type=0, inode=897)
+[00;32m13[0m	[00;33m13[0m	creat("[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", parent=897, mode='0444', inode=898)
+	0	create_dir_entry(mode='0444', parent=897, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/0f/tmp_obj_ZUiLzg', entry_type=1, inode=898)
+[00;32m14[0m	[00;33m14[0m	append("[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", count=4096, dump_offset=20987, offset=0, inode=898, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=0, inode=898, final_size=1366)[0m
+	1	[00;33mwrite(offset=0, count=1366, dump_offset=0, inode=898)[0m
+	2	[00;33mwrite(offset=0, count=1366, dump_offset=20987, inode=898)[0m
+	3	[00;33mtruncate(initial_size=1366, inode=898, final_size=2732)[0m
+	4	[00;33mwrite(offset=1366, count=1366, dump_offset=0, inode=898)[0m
+	5	[00;33mwrite(offset=1366, count=1366, dump_offset=22353, inode=898)[0m
+	6	[00;33mtruncate(initial_size=2732, inode=898, final_size=4096)[0m
+	7	[00;33mwrite(offset=2732, count=1364, dump_offset=0, inode=898)[0m
+	8	[00;33mwrite(offset=2732, count=1364, dump_offset=23719, inode=898)[0m
+[00;32m15[0m	[00;33m15[0m	append("[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", count=4096, dump_offset=25083, offset=4096, inode=898, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=4096, inode=898, final_size=5462)[0m
+	1	[00;33mwrite(offset=4096, count=1366, dump_offset=0, inode=898)[0m
+	2	[00;33mwrite(offset=4096, count=1366, dump_offset=25083, inode=898)[0m
+	3	[00;33mtruncate(initial_size=5462, inode=898, final_size=6828)[0m
+	4	[00;33mwrite(offset=5462, count=1366, dump_offset=0, inode=898)[0m
+	5	[00;33mwrite(offset=5462, count=1366, dump_offset=26449, inode=898)[0m
+	6	[00;33mtruncate(initial_size=6828, inode=898, final_size=8192)[0m
+	7	[00;33mwrite(offset=6828, count=1364, dump_offset=0, inode=898)[0m
+	8	[00;33mwrite(offset=6828, count=1364, dump_offset=27815, inode=898)[0m
+[00;32m16[0m	[00;33m16[0m	append("[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", count=4096, dump_offset=29179, offset=8192, inode=898, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=8192, inode=898, final_size=9558)[0m
+	1	[00;33mwrite(offset=8192, count=1366, dump_offset=0, inode=898)[0m
+	2	[00;33mwrite(offset=8192, count=1366, dump_offset=29179, inode=898)[0m
+	3	[00;33mtruncate(initial_size=9558, inode=898, final_size=10924)[0m
+	4	[00;33mwrite(offset=9558, count=1366, dump_offset=0, inode=898)[0m
+	5	[00;33mwrite(offset=9558, count=1366, dump_offset=30545, inode=898)[0m
+	6	[00;33mtruncate(initial_size=10924, inode=898, final_size=12288)[0m
+	7	[00;33mwrite(offset=10924, count=1364, dump_offset=0, inode=898)[0m
+	8	[00;33mwrite(offset=10924, count=1364, dump_offset=31911, inode=898)[0m
+[00;32m17[0m	[00;33m17[0m	append("[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", count=4096, dump_offset=33275, offset=12288, inode=898, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=12288, inode=898, final_size=13654)[0m
+	1	[00;33mwrite(offset=12288, count=1366, dump_offset=0, inode=898)[0m
+	2	[00;33mwrite(offset=12288, count=1366, dump_offset=33275, inode=898)[0m
+	3	[00;33mtruncate(initial_size=13654, inode=898, final_size=15020)[0m
+	4	[00;33mwrite(offset=13654, count=1366, dump_offset=0, inode=898)[0m
+	5	[00;33mwrite(offset=13654, count=1366, dump_offset=34641, inode=898)[0m
+	6	[00;33mtruncate(initial_size=15020, inode=898, final_size=16384)[0m
+	7	[00;33mwrite(offset=15020, count=1364, dump_offset=0, inode=898)[0m
+	8	[00;33mwrite(offset=15020, count=1364, dump_offset=36007, inode=898)[0m
+[00;32m18[0m	[00;33m18[0m	append("[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", count=4096, dump_offset=37371, offset=16384, inode=898, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=16384, inode=898, final_size=17750)[0m
+	1	[00;33mwrite(offset=16384, count=1366, dump_offset=0, inode=898)[0m
+	2	[00;33mwrite(offset=16384, count=1366, dump_offset=37371, inode=898)[0m
+	3	[00;33mtruncate(initial_size=17750, inode=898, final_size=19116)[0m
+	4	[00;33mwrite(offset=17750, count=1366, dump_offset=0, inode=898)[0m
+	5	[00;33mwrite(offset=17750, count=1366, dump_offset=38737, inode=898)[0m
+	6	[00;33mtruncate(initial_size=19116, inode=898, final_size=20480)[0m
+	7	[00;33mwrite(offset=19116, count=1364, dump_offset=0, inode=898)[0m
+	8	[00;33mwrite(offset=19116, count=1364, dump_offset=40103, inode=898)[0m
+[00;32m19[0m	[00;33m19[0m	append("[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", count=507, dump_offset=41467, offset=20480, inode=898, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=20480, inode=898, final_size=20649)[0m
+	1	[00;33mwrite(offset=20480, count=169, dump_offset=0, inode=898)[0m
+	2	[00;33mwrite(offset=20480, count=169, dump_offset=41467, inode=898)[0m
+	3	[00;33mtruncate(initial_size=20649, inode=898, final_size=20818)[0m
+	4	[00;33mwrite(offset=20649, count=169, dump_offset=0, inode=898)[0m
+	5	[00;33mwrite(offset=20649, count=169, dump_offset=41636, inode=898)[0m
+	6	[00;33mtruncate(initial_size=20818, inode=898, final_size=20987)[0m
+	7	[00;33mwrite(offset=20818, count=169, dump_offset=0, inode=898)[0m
+	8	write(offset=20818, count=169, dump_offset=41805, inode=898)
+[00;32m20[0m	[00;33m20[0m	[00;31mfsync[0m("[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", inode=898, size=20987)
+	0	[00;31msync[0m(count=20987, offset=0, inode=898)
+[00;32m21[0m	[00;33m21[0m	link(source_parent=897, dest="[00;42m.git/objects/0f/3e2c06542f302e59799a27897062f8204a5647[0m", dest_parent=897, source="[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", source_inode=898)
+	0	create_dir_entry(mode=None, parent=897, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/0f/3e2c06542f302e59799a27897062f8204a5647', entry_type=1, inode=898)
+[00;32m22[0m	[00;33m22[0m	unlink("[00;31m.git/objects/0f/tmp_obj_ZUiLzg[0m", parent=897, hardlinks=2, inode=898, size=20987)
+	0	[00;33mdelete_dir_entry(parent=897, entry_type=1, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/0f/tmp_obj_ZUiLzg', inode=898)[0m
+[00;32m23[0m	[00;33m23[0m	append("[00;42m.git/index.lock[0m", count=320, dump_offset=41974, offset=0, inode=894, dump_file='tmp/strace.out.byte_dump.1338')
+	0	[00;33mtruncate(initial_size=0, inode=894, final_size=107)[0m
+	1	[00;33mwrite(offset=0, count=107, dump_offset=0, inode=894)[0m
+	2	[00;33mwrite(offset=0, count=107, dump_offset=41974, inode=894)[0m
+	3	[00;33mtruncate(initial_size=107, inode=894, final_size=214)[0m
+	4	[00;33mwrite(offset=107, count=107, dump_offset=0, inode=894)[0m
+	5	[00;33mwrite(offset=107, count=107, dump_offset=42081, inode=894)[0m
+	6	[00;33mtruncate(initial_size=214, inode=894, final_size=320)[0m
+	7	[00;33mwrite(offset=214, count=106, dump_offset=0, inode=894)[0m
+	8	[00;33mwrite(offset=214, count=106, dump_offset=42188, inode=894)[0m
+[00;32m24[0m	[00;33m24[0m	rename(source_hardlinks=1, source_parent=867, dest="[00;42m.git/index[0m", dest_size=176, dest_hardlinks=1, source_size=320, dest_parent=867, source="[00;42m.git/index.lock[0m", source_inode=894, dest_inode=874)
+	0	[00;33mdelete_dir_entry(parent=867, entry_type=1, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/index', inode=874)[0m
+	1	[00;33mtruncate(initial_size=176, inode=874, final_size=118)[0m
+	2	[00;33mtruncate(initial_size=118, inode=874, final_size=59)[0m
+	3	[00;33mtruncate(initial_size=59, inode=874, final_size=0)[0m
+	4	[00;33mdelete_dir_entry(parent=867, entry_type=1, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/index.lock', inode=894)[0m
+	5	[00;33mcreate_dir_entry(mode=None, parent=867, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/index', entry_type=1, inode=894)[0m
+[00;32m25[0m	[00;33m25[0m	creat("[00;42m.git/index.lock[0m", parent=867, mode='0666', inode=899)
+	0	create_dir_entry(mode='0666', parent=867, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/index.lock', entry_type=1, inode=899)
+[00;32m26[0m	[00;33m26[0m	unlink("[00;42m.git/index.lock[0m", parent=867, hardlinks=1, inode=899, size=0)
+	0	[00;33mdelete_dir_entry(parent=867, entry_type=1, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/index.lock', inode=899)[0m
+[00;32m27[0m	[00;33m27[0m	trunc("[00;36m.git/COMMIT_EDITMSG[0m", initial_size=6, inode=891, final_size=0)
+	0	truncate(initial_size=6, inode=891, final_size=4)
+	1	truncate(initial_size=4, inode=891, final_size=2)
+	2	truncate(initial_size=2, inode=891, final_size=0)
+[00;32m28[0m	[00;33m28[0m	append("[00;36m.git/COMMIT_EDITMSG[0m", count=6, dump_offset=0, offset=0, inode=891, dump_file='tmp/strace.out.byte_dump.1359')
+	0	[00;33mtruncate(initial_size=0, inode=891, final_size=2)[0m
+	1	[00;33mwrite(offset=0, count=2, dump_offset=0, inode=891)[0m
+	2	[00;33mwrite(offset=0, count=2, dump_offset=0, inode=891)[0m
+	3	[00;33mtruncate(initial_size=2, inode=891, final_size=4)[0m
+	4	[00;33mwrite(offset=2, count=2, dump_offset=0, inode=891)[0m
+	5	[00;33mwrite(offset=2, count=2, dump_offset=2, inode=891)[0m
+	6	[00;33mtruncate(initial_size=4, inode=891, final_size=6)[0m
+	7	[00;33mwrite(offset=4, count=2, dump_offset=0, inode=891)[0m
+	8	[00;33mwrite(offset=4, count=2, dump_offset=4, inode=891)[0m
+[00;32m29[0m	[00;33m29[0m	mkdir("[00;35m.git/objects/43[0m", parent=875, mode='0777', inode=900)
+	0	create_dir_entry(mode=511, parent=875, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/43', entry_type=0, inode=900)
+[00;32m30[0m	[00;33m30[0m	creat("[00;35m.git/objects/43/tmp_obj_CFFmPh[0m", parent=900, mode='0444', inode=901)
+	0	create_dir_entry(mode='0444', parent=900, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/43/tmp_obj_CFFmPh', entry_type=1, inode=901)
+[00;32m31[0m	[00;33m31[0m	append("[00;35m.git/objects/43/tmp_obj_CFFmPh[0m", count=126, dump_offset=6, offset=0, inode=901, dump_file='tmp/strace.out.byte_dump.1359')
+	0	[00;33mtruncate(initial_size=0, inode=901, final_size=42)[0m
+	1	[00;33mwrite(offset=0, count=42, dump_offset=0, inode=901)[0m
+	2	[00;33mwrite(offset=0, count=42, dump_offset=6, inode=901)[0m
+	3	[00;33mtruncate(initial_size=42, inode=901, final_size=84)[0m
+	4	[00;33mwrite(offset=42, count=42, dump_offset=0, inode=901)[0m
+	5	[00;33mwrite(offset=42, count=42, dump_offset=48, inode=901)[0m
+	6	[00;33mtruncate(initial_size=84, inode=901, final_size=126)[0m
+	7	[00;33mwrite(offset=84, count=42, dump_offset=0, inode=901)[0m
+	8	write(offset=84, count=42, dump_offset=90, inode=901)
+[00;32m32[0m	[00;33m32[0m	[00;31mfsync[0m("[00;35m.git/objects/43/tmp_obj_CFFmPh[0m", inode=901, size=126)
+	0	[00;31msync[0m(count=126, offset=0, inode=901)
+[00;32m33[0m	[00;33m33[0m	link(source_parent=900, dest="[00;35m.git/objects/43/462efe9ea156d05216d618dcdc4a5826f4ba70[0m", dest_parent=900, source="[00;35m.git/objects/43/tmp_obj_CFFmPh[0m", source_inode=901)
+	0	create_dir_entry(mode=None, parent=900, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/43/462efe9ea156d05216d618dcdc4a5826f4ba70', entry_type=1, inode=901)
+[00;32m34[0m	[00;33m34[0m	unlink("[00;35m.git/objects/43/tmp_obj_CFFmPh[0m", parent=900, hardlinks=2, inode=901, size=126)
+	0	[00;33mdelete_dir_entry(parent=900, entry_type=1, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/43/tmp_obj_CFFmPh', inode=901)[0m
+[00;32m35[0m	[00;33m35[0m	mkdir("[00;45m.git/objects/51[0m", parent=875, mode='0777', inode=902)
+	0	create_dir_entry(mode=511, parent=875, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/51', entry_type=0, inode=902)
+[00;32m36[0m	[00;33m36[0m	creat("[00;42m.git/objects/51/tmp_obj_OxE9Sn[0m", parent=902, mode='0444', inode=903)
+	0	create_dir_entry(mode='0444', parent=902, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/51/tmp_obj_OxE9Sn', entry_type=1, inode=903)
+[00;32m37[0m	[00;33m37[0m	append("[00;42m.git/objects/51/tmp_obj_OxE9Sn[0m", count=137, dump_offset=132, offset=0, inode=903, dump_file='tmp/strace.out.byte_dump.1359')
+	0	[00;33mtruncate(initial_size=0, inode=903, final_size=46)[0m
+	1	[00;33mwrite(offset=0, count=46, dump_offset=0, inode=903)[0m
+	2	[00;33mwrite(offset=0, count=46, dump_offset=132, inode=903)[0m
+	3	[00;33mtruncate(initial_size=46, inode=903, final_size=92)[0m
+	4	[00;33mwrite(offset=46, count=46, dump_offset=0, inode=903)[0m
+	5	[00;33mwrite(offset=46, count=46, dump_offset=178, inode=903)[0m
+	6	[00;33mtruncate(initial_size=92, inode=903, final_size=137)[0m
+	7	[00;33mwrite(offset=92, count=45, dump_offset=0, inode=903)[0m
+	8	write(offset=92, count=45, dump_offset=224, inode=903)
+[00;32m38[0m	[00;33m38[0m	[00;31mfsync[0m("[00;42m.git/objects/51/tmp_obj_OxE9Sn[0m", inode=903, size=137)
+	0	[00;31msync[0m(count=137, offset=0, inode=903)
+[00;32m39[0m	[00;33m39[0m	link(source_parent=902, dest="[00;45m.git/objects/51/a07fbef33412a60f11ad86abafaa27f86ea045[0m", dest_parent=902, source="[00;42m.git/objects/51/tmp_obj_OxE9Sn[0m", source_inode=903)
+	0	create_dir_entry(mode=None, parent=902, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/51/a07fbef33412a60f11ad86abafaa27f86ea045', entry_type=1, inode=903)
+[00;32m40[0m	[00;33m40[0m	unlink("[00;42m.git/objects/51/tmp_obj_OxE9Sn[0m", parent=902, hardlinks=2, inode=903, size=137)
+	0	[00;33mdelete_dir_entry(parent=902, entry_type=1, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/objects/51/tmp_obj_OxE9Sn', inode=903)[0m
+[00;32m41[0m	[00;33m41[0m	creat("[00;31m.git/refs/heads/master.lock[0m", parent=872, mode='0666', inode=904)
+	0	create_dir_entry(mode='0666', parent=872, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/refs/heads/master.lock', entry_type=1, inode=904)
+[00;32m42[0m	[00;33m42[0m	append("[00;31m.git/refs/heads/master.lock[0m", count=40, dump_offset=269, offset=0, inode=904, dump_file='tmp/strace.out.byte_dump.1359')
+	0	[00;33mtruncate(initial_size=0, inode=904, final_size=14)[0m
+	1	[00;33mwrite(offset=0, count=14, dump_offset=0, inode=904)[0m
+	2	[00;33mwrite(offset=0, count=14, dump_offset=269, inode=904)[0m
+	3	[00;33mtruncate(initial_size=14, inode=904, final_size=28)[0m
+	4	[00;33mwrite(offset=14, count=14, dump_offset=0, inode=904)[0m
+	5	[00;33mwrite(offset=14, count=14, dump_offset=283, inode=904)[0m
+	6	[00;33mtruncate(initial_size=28, inode=904, final_size=40)[0m
+	7	[00;33mwrite(offset=28, count=12, dump_offset=0, inode=904)[0m
+	8	[00;33mwrite(offset=28, count=12, dump_offset=297, inode=904)[0m
+[00;32m43[0m	[00;33m43[0m	append("[00;31m.git/refs/heads/master.lock[0m", count=1, dump_offset=309, offset=40, inode=904, dump_file='tmp/strace.out.byte_dump.1359')
+	0	[00;33mtruncate(initial_size=40, inode=904, final_size=41)[0m
+	1	[00;33mwrite(offset=40, count=1, dump_offset=0, inode=904)[0m
+	2	[00;33mwrite(offset=40, count=1, dump_offset=309, inode=904)[0m
+[00;32m44[0m	[00;33m44[0m	append("[00;42m.git/logs/refs/heads/master[0m", count=126, dump_offset=310, offset=136, inode=889, dump_file='tmp/strace.out.byte_dump.1359')
+	0	[00;33mtruncate(initial_size=136, inode=889, final_size=178)[0m
+	1	[00;33mwrite(offset=136, count=42, dump_offset=0, inode=889)[0m
+	2	[00;33mwrite(offset=136, count=42, dump_offset=310, inode=889)[0m
+	3	[00;33mtruncate(initial_size=178, inode=889, final_size=220)[0m
+	4	[00;33mwrite(offset=178, count=42, dump_offset=0, inode=889)[0m
+	5	[00;33mwrite(offset=178, count=42, dump_offset=352, inode=889)[0m
+	6	[00;33mtruncate(initial_size=220, inode=889, final_size=262)[0m
+	7	[00;33mwrite(offset=220, count=42, dump_offset=0, inode=889)[0m
+	8	[00;33mwrite(offset=220, count=42, dump_offset=394, inode=889)[0m
+[00;32m45[0m	[00;33m45[0m	append("[00;36m.git/logs/HEAD[0m", count=126, dump_offset=436, offset=136, inode=890, dump_file='tmp/strace.out.byte_dump.1359')
+	0	[00;33mtruncate(initial_size=136, inode=890, final_size=178)[0m
+	1	[00;33mwrite(offset=136, count=42, dump_offset=0, inode=890)[0m
+	2	[00;33mwrite(offset=136, count=42, dump_offset=436, inode=890)[0m
+	3	[00;33mtruncate(initial_size=178, inode=890, final_size=220)[0m
+	4	[00;33mwrite(offset=178, count=42, dump_offset=0, inode=890)[0m
+	5	[00;33mwrite(offset=178, count=42, dump_offset=478, inode=890)[0m
+	6	[00;33mtruncate(initial_size=220, inode=890, final_size=262)[0m
+	7	[00;33mwrite(offset=220, count=42, dump_offset=0, inode=890)[0m
+	8	[00;33mwrite(offset=220, count=42, dump_offset=520, inode=890)[0m
+[00;32m46[0m	[00;33m46[0m	rename(source_hardlinks=1, source_parent=872, dest="[00;35m.git/refs/heads/master[0m", dest_size=41, dest_hardlinks=1, source_size=41, dest_parent=872, source="[00;31m.git/refs/heads/master.lock[0m", source_inode=904, dest_inode=873)
+	0	[00;33mdelete_dir_entry(parent=872, entry_type=1, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/refs/heads/master', inode=873)[0m
+	1	[00;33mtruncate(initial_size=41, inode=873, final_size=28)[0m
+	2	[00;33mtruncate(initial_size=28, inode=873, final_size=14)[0m
+	3	[00;33mtruncate(initial_size=14, inode=873, final_size=0)[0m
+	4	[00;33mdelete_dir_entry(parent=872, entry_type=1, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/refs/heads/master.lock', inode=904)[0m
+	5	create_dir_entry(mode=None, parent=872, entry='/scratch/madthanu/application-fs-bugs/alc-workloads/git/workload_dir/.git/refs/heads/master', entry_type=1, inode=904)
+-------------------------------------
+[00;33m47[0m	[00;33m47[0m	[00;32mstdout[0m("'[master 51a07fb] test2\n'")
+[00;33m48[0m	[00;33m48[0m	[00;32mstdout[0m("' 2 files changed, 0 insertions(+), 0 deletions(-)\n'")
+[00;33m49[0m	[00;33m49[0m	[00;32mstdout[0m("' create mode 100644 file3\n'")
+[00;33m50[0m	[00;33m50[0m	[00;32mstdout[0m("' create mode 100644 file4\n'")
