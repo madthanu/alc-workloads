@@ -1,6 +1,10 @@
+import os
 prefix = "tmp/strace.out"
 initial_snapshot = "tmp/snapshot"
 replayed_snapshot = "/tmp/replayed_snapshot"
-base_path = "/mnt/mydisk/"
+base_path = os.getcwd() + "/workload_dir"
 orderings_script = "crash_specifier.py"
 checker_tool = "./checker.sh"
+replayer_threads = 1
+#auto_run = True
+#orderings_script = "/root/application_fs_bugs/alc-strace/standardized_specifier.py"

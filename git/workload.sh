@@ -6,11 +6,11 @@ alias git='/root/application_fs_bugs/git/installation/bin/git'
 wd="$(pwd)"
 
 function initialize_workload {
+	rm -rf "$wd"/tmp
 	mkdir -p "$wd"/tmp
-	rm -rf "$wd"/tmp/*
-	rm -rf /mnt/mydisk/*
-	rm -rf /mnt/mydisk/.git
-	cd /mnt/mydisk
+	rm -rf "$wd"/workload_dir
+	mkdir -p "$wd"/workload_dir
+	cd "$wd"/workload_dir
 	git init .
 	git config core.fsyncobjectfiles true
 	git config user.name john
@@ -24,7 +24,7 @@ function initialize_workload {
 }
 
 function do_workload {
-	cp -R /mnt/mydisk "$wd"/tmp/snapshot
+	cp -R "$wd"/workload_dir "$wd"/tmp/snapshot
 	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		git add .
 	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \

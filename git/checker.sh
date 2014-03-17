@@ -413,7 +413,7 @@ function do_it {
 	echo "$short_summary" | sed 's/consistent/C/g' | sed 's/dangling/D/g' | sed 's/directory/dir/g' | sed 's/both tracked/T/g' | sed 's/both untracked/U/g' > /tmp/checker_$$/short_output
 }
 
-do_it
-cp /tmp/checker_$$/short_output /tmp/short_output
-#cat /tmp/checker_$$/short_output
+do_it > /dev/null
+#cp /tmp/checker_$$/short_output /tmp/short_output
+cat /tmp/checker_$$/short_output
 rm -rf /tmp/checker_$$

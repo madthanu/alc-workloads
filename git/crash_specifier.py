@@ -1,5 +1,5 @@
 import datetime
-load(0)
+#load(0)
 
 # NOTE: There is one important distinction between the remove() calls and the
 # omit() calls. While removing, you actually end up changing the index number
@@ -9,7 +9,7 @@ load(0)
 # dops_omit(31); dops_omit(31);" omits only one oepration.
 
 def prefix_run():
-	load(0)
+#	load(0)
 	for i in range(0, dops_len()):
 		E = str(i) + str(dops_double(i))
 		dops_end_at(dops_double(i))
@@ -22,6 +22,7 @@ def omit_one_heuristic():
 
 	for i in range(0, dops_len()):
 		load(0)
+
 
 		till = dops_single(dops_independent_till(dops_double(i)))
 		# 'till' now contains the index of the last disk_op, till which
@@ -100,8 +101,4 @@ def example_calls():
 	dops_end_at(dops_double(2))
 	dops_replay()
 
-load(0)
-for i in range(52, 60):
-	dops_end_at(dops_double(i))
-	dops_replay()
-#prefix_run()
+prefix_run()
