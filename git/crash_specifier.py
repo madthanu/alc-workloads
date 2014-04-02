@@ -17,6 +17,7 @@ def prefix_run():
 				' E' + E)
 
 def omit_one_heuristic():
+
 	load(0)
 	last = None # Just used for asserting that the algorithm is correct
 
@@ -101,4 +102,10 @@ def example_calls():
 	dops_end_at(dops_double(2))
 	dops_replay()
 
-prefix_run()
+#prefix_run()
+#export('/tmp/exported')
+#dops_end_at((2, 0))
+#dops_replay()
+#dops_replay()
+dops_generate(expanded_atomicity = True)
+print dops_len()

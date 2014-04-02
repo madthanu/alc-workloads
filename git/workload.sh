@@ -28,7 +28,11 @@ function do_workload {
 	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		git add .
 	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
+		echo 'add finished'
+	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		git commit -m "test2"
+	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
+		echo 'commit finished'
 	git log | grep '^commit' | awk '{print $2}' > "$wd"/tmp/checker_params
 }
 

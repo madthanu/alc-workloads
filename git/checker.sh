@@ -3,11 +3,6 @@
 trap 'echo Bash error:$0 $1:${LINENO}' ERR
 set -e
 
-if [ $# -ne 1 ]
-then
-	echo 'Error: Number of arguments to checker should be 1'
-fi
-
 if [ "${1:0:1}" == "/" ]
 then
 	replayed_snapshot="$1"
@@ -15,8 +10,11 @@ else
 	replayed_snapshot="$(pwd)/$1"
 fi
 
-mkdir -p /tmp/checker_$$
-echo TERMINATED > /tmp/checker_$$/short_output
+stdout="$2"
+scratchpad='/dev/shm/madthanu-git'
+
+mkdir -p $scratchpad/gchecker_$$
+echo TERMINATED > $scratchpad/gchecker_$$/short_output
 
 ### Initialize workload parameters
 second_commit_long=$(head -1 tmp/checker_params)
@@ -28,26 +26,27 @@ git_author='john <smith>'
 if [ $first_commit_long == '' ] || [ $second_commit_long == '' ]
 then
 	echo "ERROR: Checker parameters not initialized by workload script."
-	echo "ERROR: Checker parameters not initialized by workload script." > /tmp/checker_$$/short_output
+	echo "ERROR: Checker parameters not initialized by workload script." > $scratchpad/gchecker_$$/short_output
 	exit 1
 fi
 
 ### Initializing directories
-rm -rf /tmp/checker_$$/scratchpad
-cp -R "$replayed_snapshot" /tmp/checker_$$/scratchpad
-echo "not done" > /tmp/checker_$$/short_output
+rm -rf $scratchpad/gchecker_$$/scratchpad
+cp -R "$replayed_snapshot" $scratchpad/gchecker_$$/scratchpad
+echo "not done" > $scratchpad/gchecker_$$/short_output
 cd $replayed_snapshot
 
 ### Variable to track whether a lock existed in this crash scenario
-echo 0 > /tmp/checker_$$/lock_found
-echo 0 > /tmp/checker_$$/timed_out
+echo 0 > $scratchpad/gchecker_$$/lock_found
+echo 0 > $scratchpad/gchecker_$$/timed_out
 
 function git {
-	timeout -k 1 2 git "$@"
+	#timeout -k 1 2 git "$@"
+	timeout 3 git "$@"
 	if [ $? -eq 124 ]
 	then
 		echo "timeout"
-		echo 1 > /tmp/checker_$$/timed_out
+		echo 1 > $scratchpad/gchecker_$$/timed_out
 	fi
 }
 
@@ -208,7 +207,7 @@ function rm_add_commit_check {
 			echo "inconsistent, no-lock-warning git-rm"
 			return
 		else
-			echo 1 > /tmp/checker_$$/lock_found
+			echo 1 > $scratchpad/gchecker_$$/lock_found
 			rm -f $replayed_snapshot/.git/index.lock
 			o_rm=$(git rm file1 file2 2>&1) || true
 		fi
@@ -247,7 +246,7 @@ function rm_add_commit_check {
 	if [ $o_lock_exists -eq 0 ]
 	then
 		# lock actually does exist
-		echo 1 > /tmp/checker_$$/lock_found
+		echo 1 > $scratchpad/gchecker_$$/lock_found
 		rm -f $replayed_snapshot/.git/refs/heads/master.lock
 		o_commit=$(git commit -m "test3" 2>&1) || true
 	fi
@@ -268,7 +267,7 @@ function post_checks {
 	function check_data {
 		file="$1"
 		msg="$2"
-		o_correct=$(diff $replayed_snapshot/$file /tmp/checker_$$/scratchpad/$file | wc -l)
+		o_correct=$(diff $replayed_snapshot/$file $scratchpad/gchecker_$$/scratchpad/$file | wc -l)
 		if [ $o_correct -ne 0 ]
 		then
 			echo "inconsistent data, $file, $msg"
@@ -398,22 +397,26 @@ function do_it {
 	echo "post_checks: $post_checks_output"
 	short_summary="$short_summary; $post_checks_output"
 
-	echo "lock_found: $(cat /tmp/checker_$$/lock_found)"
-	if [ $(cat /tmp/checker_$$/lock_found) -eq 1 ]
+	echo "stdout:" $stdout
+	short_stdout=$(echo -n S; echo $stdout | sed 's/add finished.*commit finished.*/AC/g' | sed 's/add finished.*/A/g' | grep '^A\?C\?$')
+	short_summary="$short_summary; $short_stdout"
+
+	echo "lock_found: $(cat $scratchpad/gchecker_$$/lock_found)"
+	if [ $(cat $scratchpad/gchecker_$$/lock_found) -eq 1 ]
 	then
 		short_summary="$short_summary; L"
 	fi
 
-	echo "timed_out: $(cat /tmp/checker_$$/timed_out)"
-	if [ $(cat /tmp/checker_$$/timed_out) -eq 1 ]
+	echo "timed_out: $(cat $scratchpad/gchecker_$$/timed_out)"
+	if [ $(cat $scratchpad/gchecker_$$/timed_out) -eq 1 ]
 	then
 		short_summary="$short_summary; T"
 	fi
 
-	echo "$short_summary" | sed 's/consistent/C/g' | sed 's/dangling/D/g' | sed 's/directory/dir/g' | sed 's/both tracked/T/g' | sed 's/both untracked/U/g' > /tmp/checker_$$/short_output
+	echo "$short_summary" | sed 's/consistent/C/g' | sed 's/dangling/D/g' | sed 's/directory/dir/g' | sed 's/both tracked/T/g' | sed 's/both untracked/U/g' > $scratchpad/gchecker_$$/short_output
 }
 
-do_it > /dev/null
-#cp /tmp/checker_$$/short_output /tmp/short_output
-cat /tmp/checker_$$/short_output
-rm -rf /tmp/checker_$$
+do_it  > /dev/null
+#cp $scratchpad/gchecker_$$/short_output $scratchpad/gshort_output
+cat $scratchpad/gchecker_$$/short_output
+rm -rf $scratchpad/gchecker_$$
