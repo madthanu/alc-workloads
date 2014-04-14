@@ -16,7 +16,7 @@ repairdb=0 checksums_verify=1 ./checker "$@" 2>&1 | tee -a $scratchpad/checker_$
 
 rm -rf "$workload_dir"
 cp -R $scratchpad/checker_$$/workload_dir "$workload_dir"
-repairdb=1 checksums_verify=0 ./checker "$@" 2>&1 | tee -a $scratchpad/checker_$$/long_output > $scratchpad/checker_$$/short_output_tmp
+repairdb=1 checksums_verify=1 ./checker "$@" 2>&1 | tee -a $scratchpad/checker_$$/long_output > $scratchpad/checker_$$/short_output_tmp
 (cat $scratchpad/checker_$$/short_output_tmp | tr '\n' '.'; echo) >> $scratchpad/checker_$$/short_output
 
 rm -rf $scratchpad/checker_$$/workload_dir

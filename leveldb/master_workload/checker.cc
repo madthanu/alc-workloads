@@ -20,16 +20,15 @@ int main(int argc, char *argv[]) {
 
 	options.create_if_missing = true;
 
+	if(env_bool_decode("checksums_verify", true)) {
+		options.paranoid_checks = true;
+	}
+
 	if(env_bool_decode("repairdb", true)) {
 		ret = RepairDB(db_path(), options);
 		status_assert(ret);
 		exit(0);
 	}
-
-	if(env_bool_decode("checksums_verify", true)) {
-		options.paranoid_checks = true;
-	}
-
 
 	ret = DB::Open(options, db_path(), &db);
 	status_assert(ret);
