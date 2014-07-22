@@ -25,14 +25,15 @@ function initialize_workload {
 
 function do_workload {
 	cp -R "$wd"/workload_dir "$wd"/tmp/snapshot
-	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
+	strace -k -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		git add .
-	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
+	strace -k -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		echo 'add finished'
-	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
+	strace -k -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		git commit -m "test2"
-	strace -s 0 -ff -tt -o "$wd"/tmp/strace.out \
+	strace -k -s 0 -ff -tt -o "$wd"/tmp/strace.out \
 		echo 'commit finished'
+	retrieve_symbols.py "$wd"/tmp/strace.out
 	git log | grep '^commit' | awk '{print $2}' > "$wd"/tmp/checker_params
 }
 

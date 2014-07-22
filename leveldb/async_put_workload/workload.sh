@@ -15,7 +15,8 @@ function initialize_workload {
 
 function do_workload {
 	cp -R $workload_dir ./tmp/snapshot
-	mtrace -o ./tmp/strace.out -- ./workload
+#	mtrace -o ./tmp/strace.out -- ./workload
+    /tmp/strace-plus/strace -k -o ./tmp/strace+ ./workload
 }
 
 initialize_workload

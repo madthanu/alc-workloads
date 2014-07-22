@@ -2,3 +2,6 @@
 html_output.html
 out.jpeg
 strace.out.*
+**/temp.gdb
+temp.gdb
+*/temp.gdb

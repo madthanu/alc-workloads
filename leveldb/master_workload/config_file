@@ -4,11 +4,11 @@ prefix = "tmp/strace.out"
 initial_snapshot = "tmp/snapshot"
 #replayed_snapshot = "/tmp/replayed_snapshot"
 base_path = os.getcwd() + "/workload_dir"
-orderings_script = "crash_specifier.py"
+#orderings_script = "crash_specifier.py"
 checker_tool = "./checker.sh"
 starting_cwd = "."
 hide_diskops = False
-replayer_threads = 4
+replayer_threads = 8
 YYYY = base_path
 def t_interesting_path_function(path):
 	global YYYY
@@ -16,7 +16,8 @@ def t_interesting_path_function(path):
 		return False
 	return re.search(r'^' + YYYY, path)
 interesting_path_function = t_interesting_path_function
-orderings_script = '/root/application_fs_bugs/alc-strace/error_reporter/standardized_specifier.py'
+orderings_script = '/root/application_fs_bugs/alc-strace/error_reporter/export_specifier.py'
 #orderings_script = '/root/application_fs_bugs/alc-strace/error_reporter/export_specifier.py'
 auto_run = True
 scratchpad_dir = '/dev/shm/madthanu-leveldb-master'
+mtrace_shadow = True

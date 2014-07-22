@@ -31,8 +31,8 @@ then
 fi
 
 ### Initializing directories
-rm -rf $scratchpad/gchecker_$$/scratchpad
-cp -R "$replayed_snapshot" $scratchpad/gchecker_$$/scratchpad
+#rm -rf $scratchpad/gchecker_$$/scratchpad
+#cp -R "$replayed_snapshot" $scratchpad/gchecker_$$/scratchpad
 echo "not done" > $scratchpad/gchecker_$$/short_output
 cd $replayed_snapshot
 
@@ -267,7 +267,7 @@ function post_checks {
 	function check_data {
 		file="$1"
 		msg="$2"
-		o_correct=$(diff $replayed_snapshot/$file $scratchpad/gchecker_$$/scratchpad/$file | wc -l)
+		o_correct=$(diff $replayed_snapshot/$file /root/application_fs_bugs/alc-workloads/git/workload_dir/$file | wc -l)
 		if [ $o_correct -ne 0 ]
 		then
 			echo "inconsistent data, $file, $msg"
